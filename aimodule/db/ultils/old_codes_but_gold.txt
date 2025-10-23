@@ -1,0 +1,66 @@
+from typing import (Dict, List, Sequence, Tuple, Callable,
+                    runtime_checkable, Protocol, TypeVar, Type, cast)
+
+from db.ultils.connection_util import get_connection
+
+__all__ = ["Repository"]
+
+class _Repository_cls:
+    def __init__(self, db_url, table_name) -> None:
+        self.get_connection = lambda: get_connection(db_url)
+        self.table_name = table_name
+
+    def _execute_query(self, query:str, *fields:str) -> List[Tuple]:
+        with self.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query, fields)                
+                return cur.fetchall()
+    @property
+    def columns(self) -> Sequence[str]:
+        query = f"SELECT * FROM {self.table_name}"
+        with self.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query)
+                return [d[0] for d in cur.description] # type: ignore
+
+    @staticmethod
+    def to_dict(rows:Sequence[Tuple], keys:Sequence[str]) -> Sequence[Dict]:
+        res = [{k:v for (k,v) in zip(keys, row)} for row in rows]
+        return res
+
+    def find_all(self):               
+        query = f""" SELECT * FROM  {self.table_name} """
+        return self._execute_query(query, self.table_name)
+    
+    def find_by_fields(self, *fields:str) -> Sequence[Tuple]:
+        f_query = ", ".join(["%s"] * len(fields))
+        query = f"SELECT {f_query} FROM {self.table_name}"
+        return self._execute_query(query, *fields)
+
+T = TypeVar("T")
+
+@runtime_checkable
+class RepositoryBase(Protocol):
+    table_name: str
+
+    def _execute_query(self, query: str, *fields: str) -> List[Tuple]: ...
+    @property
+    def columns(self) -> Sequence[str]: ...
+    def to_dict(self, rows: Sequence[Tuple], keys: Sequence[str]) -> Sequence[Dict]: ...
+    def find_all(self) -> Sequence[Tuple]: ...
+    def find_by_fields(self, *fields: str) -> Sequence[Tuple]: ...
+
+
+def Repository(db_url:str, table_name:str) -> Callable[[Type[T]], Type[_Repository_cls]]:
+        
+    def wrapper(cls:Type[T]) -> Type[_Repository_cls]:
+        def __custom_init(self, *args, **kwargs):
+            _Repository_cls.__init__(self, db_url, table_name)
+            cls.__init__(self, *args, **kwargs)
+
+        attr_d = cls.__dict__.copy()
+        attr_d["__init__"] = __custom_init
+        new_cls = type(cls.__name__, (_Repository_cls, cls), attr_d)
+        return new_cls
+    
+    return wrapper

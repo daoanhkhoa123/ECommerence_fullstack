@@ -14,4 +14,4 @@ def setup_loggin(debug:bool=False) -> None:
 
     logging.getLogger("psycopg2").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
-    
+
