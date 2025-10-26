@@ -23,13 +23,28 @@ VALUES
     (3, 'TechStore', 'Electronics and gadgets', '0912123123'),
     (4, 'FashionHub', 'Trendy clothing and accessories', '0987766554');
 
--- === Products ===
-INSERT INTO products (name, description, category, brand, image_url)
+-- === Categories ===
+INSERT INTO categories (name, description)
 VALUES
-    ('iPhone 15', 'Latest Apple smartphone', 'Electronics', 'Apple', 'https://example.com/iphone15.jpg'),
-    ('MacBook Air M3', 'Lightweight and powerful laptop', 'Electronics', 'Apple', 'https://example.com/macbookair.jpg'),
-    ('Leather Jacket', 'Premium leather jacket', 'Clothing', 'UrbanStyle', 'https://example.com/jacket.jpg'),
-    ('Sneakers', 'Comfortable casual sneakers', 'Footwear', 'RunFast', 'https://example.com/sneakers.jpg');
+    ('Electronics', 'Devices and gadgets'),
+    ('Clothing', 'Apparel and fashion'),
+    ('Footwear', 'Shoes and sneakers');
+
+-- === Products ===
+INSERT INTO products (name, description, category_id, brand, image_url)
+VALUES
+    ('iPhone 15', 'Latest Apple smartphone', 1, 'Apple', 'https://example.com/iphone15.jpg'),
+    ('MacBook Air M3', 'Lightweight and powerful laptop', 1, 'Apple', 'https://example.com/macbookair.jpg'),
+    ('Leather Jacket', 'Premium leather jacket', 2, 'UrbanStyle', 'https://example.com/jacket.jpg'),
+    ('Sneakers', 'Comfortable casual sneakers', 3, 'RunFast', 'https://example.com/sneakers.jpg');
+
+-- === Products Categories ===
+INSERT INTO products_categories (product_id, category_id)
+VALUES
+    (1, 1),
+    (2, 1),
+    (3, 2),
+    (4, 3);
 
 -- === Vendor Products (listings per vendor) ===
 INSERT INTO vendors_products (vendor_id, product_id, price, stock, sku, is_featured)

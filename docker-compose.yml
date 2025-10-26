@@ -1,18 +1,31 @@
-version: '3.9'
-
 services:
-  db:
+  backend_db:
     image: postgres:16
-    container_name: postgres-db
+    container_name: postgres-backend
     restart: always
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: ecommerce_db
+      POSTGRES_DB: backend_db
+      TZ: Asia/Saigon
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  aimodule_db:
+    image: postgres:16
+    container_name: postgres-aimodule
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: aimodule_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - aimodule_pgdata:/var/lib/postgresql/data
+
 volumes:
   pgdata:
+  aimodule_pgdata:

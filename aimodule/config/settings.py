@@ -5,7 +5,7 @@ _ENV_FILE_ENCODING = "utf-8"
 
 class DatabaseSettings(BaseSettings):
     backend_db_url: str | None = None
-    analytic_db_url: str | None = None
+    aimodule_db_url: str | None = None
     minconn: int = 1
     maxconn: int = 3
 

@@ -23,3 +23,18 @@
 -- JOIN vendors v ON vp.vendor_id = v.vendor_id
 -- ORDER BY o.placed_at DESC, o.order_id, oi.order_item_id;
 
+-- -- === Categories ===
+-- INSERT INTO categories (name, description)
+-- VALUES
+--     ('Electronics', 'Devices and gadgets'),
+--     ('Clothing', 'Apparel and fashion'),
+--     ('Footwear', 'Shoes and sneakers');
+
+-- -- === Products ===
+-- INSERT INTO products (name, description, category_id, brand, image_url)
+-- VALUES
+--     ('iPhone 15', 'Latest Apple smartphone', 1, 'Apple', 'https://example.com/iphone15.jpg'),
+--     ('MacBook Air M3', 'Lightweight and powerful laptop', 1, 'Apple', 'https://example.com/macbookair.jpg'),
+--     ('Leather Jacket', 'Premium leather jacket', 2, 'UrbanStyle', 'https://example.com/jacket.jpg'),
+--     ('Sneakers', 'Comfortable casual sneakers', 3, 'RunFast', 'https://example.com/sneakers.jpg');
+

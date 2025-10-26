@@ -52,6 +52,12 @@ OrdersColumns = Literal[
     "placed_at"
 ]
 
+OrdersStatus = Literal['pending', 
+                       'paid', 
+                       'shipped', 
+                       'delivered', 
+                       'cancelled']
+
 OrdersItemsColumns = Literal[
     "order_item_id",
     "order_id",

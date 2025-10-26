@@ -2,7 +2,7 @@ CREATE TABLE accounts (
     account_id SERIAL PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    role VARCHAR(20) NOT NULL CHECK (role IN ('customer', 'vendor'))
+    role VARCHAR(20) NOT NULL CHECK (role IN ('customer', 'vendor', 'admin'))
 ) INHERITS (base_entity);
 
 CREATE TRIGGER trg_accounts_baseent
