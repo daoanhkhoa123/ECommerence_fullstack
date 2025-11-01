@@ -6,7 +6,6 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 
 public record PaymentRequest(
-
     @NotNull(message = "Payment method is required")
     PaymentMethod paymentMethod,
 

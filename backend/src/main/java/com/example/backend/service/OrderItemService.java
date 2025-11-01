@@ -7,11 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.backend.dto.OrderItemProductRequest;
-import com.example.backend.dto.OrderItemProductRespond;
 import com.example.backend.entity.Order;
 import com.example.backend.entity.OrderItem;
-import com.example.backend.entity.Product;
-import com.example.backend.entity.Vendor;
 import com.example.backend.entity.VendorProduct;
 import com.example.backend.enums.OrderStatus;
 import com.example.backend.repository.CustomerRepository;
@@ -31,26 +28,12 @@ public class OrderItemService {
     private final VendorProductRepository vendorProductRepository;
     private final CustomerRepository customerRepository;
 
-       
-        private OrderItemProductRespond buildRespondByOrderItem(OrderItem orderItem)
-        {
-                VendorProduct vp = orderItem.getVendorProduct();
-                Vendor v = vp.getVendor();
-                Product p = vp.getProduct();
-
-                return new OrderItemProductRespond(orderItem.getId(), vp.getId(), 
-                orderItem.getQuantity(), orderItem.getSubTotal(), 
-                v.getShopName(), v.getPhone(), p.getName(), 
-                p.getBrand(), p.getImageUrl());
-        }
-
-
-        public OrderItemProductRespond createOrderItemProduct(Integer customerId, OrderItemProductRequest request) {
+    public OrderItem createOrderItemProduct(Integer customerId, OrderItemProductRequest request) {
         // Ensure the customer exists
         customerRepository.findById(customerId)
-        .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Customer not found with ID: " + customerId
-        ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Customer not found with ID: " + customerId
+                ));
 
         // Find or ensure the customer has a pending order
         Order order = orderRepository
@@ -66,7 +49,6 @@ public class OrderItemService {
                         HttpStatus.NOT_FOUND, "Vendor product not found with ID: " + request.vendorProductId()
                 ));
 
-
         // Create new order item
         OrderItem orderItem = new OrderItem();
         orderItem.setOrder(order);
@@ -75,54 +57,77 @@ public class OrderItemService {
         orderItemRepository.save(orderItem);
 
         // Update order total
+        order.getOrderItems().add(orderItem);
         order.setTotalAmount(order.getTotalAmount().add(orderItem.getSubTotal()));
         orderRepository.save(order);
 
-        return buildRespondByOrderItem(orderItem);
+        return orderItem;
     }
 
-    public OrderItemProductRespond findOrderItemProduct(Integer customerId, Integer orderItemId)
-    {
+    public OrderItem findOrderItemProduct(Integer customerId, Integer orderItemId) {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "OrderItem not found with id: "+ orderItemId));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "OrderItem not found with id: " + orderItemId
+                ));
 
-        if (orderItem.getOrder().getCustomer().getId() != customerId)
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Customer id "+ customerId +
-        " does not have access to OrderItem id: " + orderItemId);
+        if (!orderItem.getOrder().getCustomer().getId().equals(customerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Customer id " + customerId + " does not have access to OrderItem id: " + orderItemId
+            );
+        }
 
-        return buildRespondByOrderItem(orderItem);
+        return orderItem;
     }
 
-
-
-        public List<OrderItemProductRespond> findAllOrderItemProductByOrderId(Integer customerId, Integer orderId) {
+    public List<OrderItem> findAllOrderItemProductByOrderId(Integer customerId, Integer orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Order not found"
+                ));
 
         if (!order.getCustomer().getId().equals(customerId)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Order does not belong to this customer");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Order does not belong to this customer"
+            );
         }
 
-        return order.getOrderItems()
-                        .stream()
-                        .map(this::buildRespondByOrderItem) 
-                        .toList();
-        }
+        return order.getOrderItems();
+    }
 
-        public List<OrderItemProductRespond> findAllOrderItemProductInCart(Integer customerId, Order cart)
-        {
-                return findAllOrderItemProductByOrderId(customerId, cart.getId());
-        }
-
-@Transactional
-    public void deleteOrderItem(Integer customerId, Integer orderItemId)
+    @Transactional
+    public VendorProduct decreaseStockByOrderItem(OrderItem orderItem)
     {
-        OrderItem orderItem = orderItemRepository.findById(orderItemId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "OrderItem not found with id: "+ orderItemId));
+        VendorProduct vp = orderItem.getVendorProduct();
+        if (vp.getStock() <= 0)
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    String.format(
+                            "Vendor %s has run out of %s with id %d",
+                            vp.getVendor().getShopName(),
+                            vp.getProduct().getName(),
+                            vp.getId()
+                    ));
+                    
+        vp.setStock(vp.getStock() - orderItem.getQuantity());
+        vendorProductRepository.save(vp);
 
-        if (orderItem.getOrder().getCustomer().getId() != customerId)
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Customer id "+ customerId +
-        " does not have access to OrderItem id: " + orderItemId);
+        return vp;
+    }
+
+    @Transactional
+    public void deleteOrderItem(Integer customerId, Integer orderItemId) {
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "OrderItem not found with id: " + orderItemId
+                ));
+
+        if (!orderItem.getOrder().getCustomer().getId().equals(customerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Customer id " + customerId + " does not have access to OrderItem id: " + orderItemId
+            );
+        }
 
         orderItemRepository.deleteById(orderItemId);
     }

@@ -13,9 +13,6 @@ public record VendorProductRequest(
     String brand,
     String imageUrl,
 
-    // Not used when respond
-    ProductCategoryPatchRequest categoryRequest,
-
     // Vendor Product
     @NotNull(message = "Price is required")
     BigDecimal price,

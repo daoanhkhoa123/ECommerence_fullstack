@@ -1,7 +1,6 @@
 package com.example.backend.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -13,9 +12,6 @@ public record ProductVendorRequest(
     String description,
     String brand,
     String imageUrl,
-
-    // Category
-    List<Integer> categoryIds,
 
     // Vendor Product
     @NotNull(message = "Price is required")

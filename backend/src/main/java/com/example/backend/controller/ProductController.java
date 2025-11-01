@@ -5,13 +5,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.backend.entity.Product;
-import com.example.backend.service.CategoryService;
-import com.example.backend.service.ProductService;
-import com.example.backend.service.VendorProductService;
-
 import com.example.backend.dto.VendorProductRequest;
-import com.example.backend.dto.ProductCategoryPatchRequest;
+import com.example.backend.application.ProductApplication;
 import com.example.backend.dto.ProductVendorRequest;
 import com.example.backend.dto.VendorProductRespond;
 
@@ -23,15 +18,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
-    private final CategoryService categoryService;
-    private final ProductService productService;
-    private final VendorProductService vendorProductService;
+    private final ProductApplication productApplication;
 
     @GetMapping("/vendor-product/{vendorId}")
     public ResponseEntity<List<VendorProductRespond>> getVendorProduct(
         @PathVariable Integer vendorId) {
-        return ResponseEntity.ok(vendorProductService.findByVendorId(vendorId,
-        categoryService::findAllByProduct));
+        return ResponseEntity.ok(productApplication.findByVendorId(vendorId));
     }
 
     @PostMapping("/vendor/{vendorId}")
@@ -39,9 +31,7 @@ public class ProductController {
             @PathVariable Integer vendorId,
             @Valid @RequestBody VendorProductRequest request) {
 
-        Product product = productService.createProduct(request);
-        categoryService.addProductCategory(product.getId(), request.categoryRequest().addCategoryIds());
-        VendorProductRespond respond = vendorProductService.createVendorProduct(vendorId, product, request, categoryService::findAllByProduct);
+        VendorProductRespond respond = productApplication.createVendorProduct(vendorId, request);
         return ResponseEntity.ok(respond);
     }
 
@@ -50,15 +40,13 @@ public class ProductController {
             @PathVariable Integer vendorProductId,
             @Valid @RequestBody ProductVendorRequest request) {
         
-        Product product = productService.findProductByVendorProductId(vendorProductId);
-        categoryService.patchProductCategory(product.getId(), new ProductCategoryPatchRequest(request.categoryIds(), null));
-        VendorProductRespond respond = vendorProductService.updateVendorProduct(vendorProductId, product, request, categoryService::findAllByProduct);
+        VendorProductRespond respond = productApplication.updateVendorProduct(vendorProductId, request);
         return ResponseEntity.ok(respond);
     }
 
     @DeleteMapping("/vendor-product/{vendorProductId}")
     public ResponseEntity<Void> deleteVendorProduct(@PathVariable Integer vendorProductId) {
-        vendorProductService.deleteVendorProduct(vendorProductId);
+        productApplication.deleteVendorProduct(vendorProductId);
         return ResponseEntity.noContent().build();
     }
 }

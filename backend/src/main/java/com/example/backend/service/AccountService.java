@@ -7,9 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.backend.dto.AccountRegisterRequest;
 import com.example.backend.dto.CustomerRequest;
-import com.example.backend.dto.CustomerRespond;
 import com.example.backend.dto.VendorRequest;
-import com.example.backend.dto.VendorRespond;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Vendor;
@@ -61,65 +59,46 @@ public class AccountService {
         return vendor;
     }
 
-    public CustomerRespond getCustomer(Integer id)
+    public Customer findCustomerById(Integer id)
     {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> 
+        return customerRepository.findById(id).orElseThrow(() -> 
             new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id: " + id));
-
-        return new CustomerRespond(customer.getId(), customer.getAccount().getEmail(), 
-        customer.getFullName(), customer.getPhone(), 
-        customer.getAddress(), customer.getBirthDate());
     }
 
-    public CustomerRespond registerCustomer(CustomerRequest request)
+    public Vendor findVendorById(Integer id)
     {
-        Customer customer = setByRequest(new Customer(), request);
-        customerRepository.save(customer);
-
-        return new CustomerRespond(customer.getId(), customer.getAccount().getEmail(), 
-        customer.getFullName(), customer.getPhone(), 
-        customer.getAddress(), customer.getBirthDate());
-    }
-
-    public VendorRespond getVendor(Integer id)
-    {
-        Vendor vendor = vendorRepository.findById(id).orElseThrow(() -> 
+        return vendorRepository.findById(id).orElseThrow(() -> 
         new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendor not found with id: "+id));
-
-        return new VendorRespond(vendor.getId(), vendor.getAccount().getEmail(), 
-        vendor.getShopName(), vendor.getDescription(), vendor.getPhone());
-
     }
 
-    public VendorRespond registerVendor(VendorRequest request)
+    public Vendor registerVendor(VendorRequest request)
     {
         Vendor vendor = setByRequest(new Vendor(), request);
-
-        return new VendorRespond(vendor.getId(), vendor.getAccount().getEmail(), 
-        vendor.getShopName(), vendor.getDescription(), vendor.getPhone());
+        return vendorRepository.save(vendor);
     }
 
-    public CustomerRespond updateCustomer(Integer customerId, CustomerRequest request)
+    public Customer registerCustomer(CustomerRequest request)
+    {
+        Customer customer = setByRequest(new Customer(), request);
+        return customerRepository.save(customer);
+    }
+
+    public Customer updateCustomer(Integer customerId, CustomerRequest request)
     {
         Customer customer = customerRepository.findById(customerId)
          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
         customer = setByRequest(customer, request);
-        customerRepository.save(customer);
         
-        return new CustomerRespond(customer.getId(), customer.getAccount().getEmail(), 
-        customer.getFullName(), customer.getPhone(), 
-        customer.getAddress(), customer.getBirthDate());
+        return customerRepository.save(customer);        
     }
 
-    public VendorRespond updateVendor(Integer vendorId, VendorRequest request)
+    public Vendor updateVendor(Integer vendorId, VendorRequest request)
     {
         Vendor vendor = vendorRepository.findById(vendorId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendor not found"));
         vendor = setByRequest(vendor, request);
-        vendorRepository.save(vendor);
-
-        return new VendorRespond(vendor.getId(), vendor.getAccount().getEmail(), 
-        vendor.getShopName(), vendor.getDescription(), vendor.getPhone());
+        
+        return vendorRepository.save(vendor);
     }
 
     public void deleteCustomer(Integer customerId) {

@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import com.example.backend.entity.Customer;
 import com.example.backend.kafka.dto.CustomerEvent;
 import com.example.backend.kafka.dto.VendorEvent;
 import com.example.backend.kafka.enums.AccountTopic;
+import com.example.backend.kafka.enums.CUDType;
 
 public class AccountProducer {
     private static final Logger logger = LoggerFactory.getLogger(AccountProducer.class);
@@ -19,6 +21,23 @@ public class AccountProducer {
         this.customerTemplate = customerTemplate;
         this.vendorTemplate = vendorTemplate;
     }
+
+    public CustomerEvent buildFromCustomer(CUDType evenType, Customer customer) {
+        return new CustomerEvent(
+            evenType,                     
+            customer.getId(),
+            customer.getAccount().getEmail(),
+            customer.getFullName(),
+            customer.getPhone(),
+            customer.getAddress(),
+            customer.getBirthDate()
+        );
+    }
+
+    // public VendorEvent buildFromVendor(CUDType evenType, Vendor vendor)
+    // {
+        
+    // }
 
     public void sendCustomer(CustomerEvent event) {
         customerTemplate.send(AccountTopic.CUSTOMER.getName(), event).whenComplete((result, ex) -> {

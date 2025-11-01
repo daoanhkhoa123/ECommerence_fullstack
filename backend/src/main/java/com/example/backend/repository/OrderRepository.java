@@ -12,6 +12,6 @@ import com.example.backend.enums.OrderStatus;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    List<Order> findByCustomerId(Integer customerId);
+    List<Order> findByCustomer_Id(Integer customerId);
     Optional<Order> findFirstByCustomerIdAndOrderStatus(Integer customerId, OrderStatus orderStatus);
 }
