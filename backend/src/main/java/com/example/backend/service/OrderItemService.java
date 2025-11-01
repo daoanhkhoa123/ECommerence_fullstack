@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.backend.dto.OrderItemProductRequest;
@@ -20,8 +19,11 @@ import com.example.backend.repository.OrderItemRepository;
 import com.example.backend.repository.OrderRepository;
 import com.example.backend.repository.VendorProductRepository;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
-@Transactional
 public class OrderItemService {
 
     private final OrderRepository orderRepository;
@@ -29,17 +31,7 @@ public class OrderItemService {
     private final VendorProductRepository vendorProductRepository;
     private final CustomerRepository customerRepository;
 
-    public OrderItemService(OrderRepository orderRepository,
-                        OrderItemRepository orderItemRepository,
-                        VendorProductRepository vendorProductRepository,
-                        CustomerRepository customerRepository) {
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.vendorProductRepository = vendorProductRepository;
-        this.customerRepository = customerRepository;
-    }
-
-    
+       
         private OrderItemProductRespond buildRespondByOrderItem(OrderItem orderItem)
         {
                 VendorProduct vp = orderItem.getVendorProduct();
@@ -122,6 +114,7 @@ public class OrderItemService {
                 return findAllOrderItemProductByOrderId(customerId, cart.getId());
         }
 
+@Transactional
     public void deleteOrderItem(Integer customerId, Integer orderItemId)
     {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)

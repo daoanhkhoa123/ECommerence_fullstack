@@ -17,7 +17,9 @@ import com.example.backend.repository.ProductCategoryRepository;
 import com.example.backend.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class CategoryService {
 
@@ -25,14 +27,6 @@ public class CategoryService {
     private final ProductCategoryRepository productCategoryRepository;
     private final ProductRepository productRepository;
 
-    public CategoryService(CategoryRepository categoryRepository,
-        ProductCategoryRepository productCategoryRepository,
-        ProductRepository productRepository)
-    {
-        this.categoryRepository = categoryRepository;
-        this.productCategoryRepository = productCategoryRepository;
-        this.productRepository = productRepository;
-    }
 
     public CategoryRequestRespond findCategoryById(Integer id)
     {

@@ -3,9 +3,11 @@ package com.example.backend.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.example.backend.repository.PaymentRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.backend.dto.OrderRespond;
@@ -20,23 +22,13 @@ import com.example.backend.enums.OrderStatus;
 import com.example.backend.repository.OrderItemRepository;
 import com.example.backend.repository.OrderRepository;
 
+@RequiredArgsConstructor
 @Service
-@Transactional
 public class OrderService {
 
     private final OrderItemRepository orderItemRepository;
-
     private final PaymentRepository paymentRepository;
-
     private final OrderRepository orderRepository;
-
-    public OrderService(OrderRepository orderRepository, 
-        PaymentRepository paymentRepository, 
-        OrderItemRepository orderItemRepository) {
-        this.orderRepository = orderRepository;
-        this.paymentRepository = paymentRepository;
-        this.orderItemRepository = orderItemRepository;
-    }
 
     public List<OrderRespond> findOrderByCustomerId(Integer customerId) {
         return orderRepository.findByCustomerId(customerId).stream()
@@ -87,6 +79,10 @@ public class OrderService {
             
         for (OrderItem orderItem : orderItemRepository.findByOrder(cart)) {
                 VendorProduct vp = orderItem.getVendorProduct();
+                if (vp.getStock() <= 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                String.format("Vendor %s has run out of %s with id %d", 
+                vp.getVendor().getShopName(), vp.getProduct().getName(), vp.getId()));
+
                 vp.setStock(vp.getStock()-1);
                 orderItem.setVendorProduct(vp);
                 orderItemRepository.save(orderItem);

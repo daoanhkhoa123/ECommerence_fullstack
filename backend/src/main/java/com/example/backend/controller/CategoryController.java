@@ -11,19 +11,17 @@ import com.example.backend.dto.ProductCategoryPatchRespond;
 import com.example.backend.service.CategoryService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
-    public CategoryController (CategoryService categoryService)
-    {
-        this.categoryService = categoryService;
-    }
     
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryRequestRespond> getCategory(Integer categoryId)

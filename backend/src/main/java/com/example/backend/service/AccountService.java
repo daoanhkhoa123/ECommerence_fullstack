@@ -18,6 +18,9 @@ import com.example.backend.repository.AccountRepository;
 import com.example.backend.repository.CustomerRepository;
 import com.example.backend.repository.VendorRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class AccountService {
 
@@ -25,17 +28,6 @@ public class AccountService {
     private final CustomerRepository customerRepository;
     private final VendorRepository vendorRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public AccountService(AccountRepository accountRepository,
-                          CustomerRepository customerRepository,
-                          VendorRepository vendorRepository,
-                          PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
-        this.customerRepository = customerRepository;
-        this.vendorRepository = vendorRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     
     private Account setByRequest(Account account, AccountRegisterRequest request)
     {

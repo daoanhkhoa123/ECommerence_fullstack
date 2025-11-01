@@ -16,21 +16,15 @@ import com.example.backend.service.OrderItemService;
 import com.example.backend.service.OrderService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 
     private final OrderItemService orderItemService;
     private final OrderService orderService;
-
-    public OrderController(
-        OrderService orderService, 
-        OrderItemService orderItemService) {
-        this.orderService = orderService;
-        this.orderItemService = orderItemService;
-    }
 
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<OrderRespond>> findOrdersByCustomerId(@PathVariable Integer customerId) {

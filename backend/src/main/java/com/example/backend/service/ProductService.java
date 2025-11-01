@@ -9,21 +9,15 @@ import com.example.backend.dto.VendorProductRequest;
 import com.example.backend.entity.Product;
 import com.example.backend.repository.ProductRepository;
 import com.example.backend.repository.VendorProductRepository;
-import com.example.backend.repository.VendorRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class ProductService {
 
     private final VendorProductRepository vendorProductRepository;
     private final ProductRepository productRepository;
-
-    public ProductService(
-            VendorProductRepository vendorProductRepository,
-            ProductRepository productRepository,
-            VendorRepository vendorRepository) {
-        this.vendorProductRepository = vendorProductRepository;
-        this.productRepository = productRepository;
-    }
 
     public Product createProduct(VendorProductRequest request)
     {

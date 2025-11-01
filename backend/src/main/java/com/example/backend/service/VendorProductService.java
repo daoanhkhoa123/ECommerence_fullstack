@@ -19,7 +19,10 @@ import com.example.backend.repository.ProductRepository;
 import com.example.backend.repository.VendorProductRepository;
 import com.example.backend.repository.VendorRepository;
 
+import lombok.RequiredArgsConstructor;
 
+
+@RequiredArgsConstructor
 @Service
 public class VendorProductService {
 
@@ -28,14 +31,6 @@ public class VendorProductService {
     private final VendorProductRepository vendorProductRepository;
     private final VendorRepository vendorRepository;
 
-    public VendorProductService(
-            VendorProductRepository vendorProductRepository,
-            VendorRepository vendorRepository,
-            ProductRepository productRepository) {
-        this.vendorProductRepository = vendorProductRepository;
-        this.vendorRepository = vendorRepository;
-        this.productRepository = productRepository;
-    }
 
     private VendorProductRespond buildByVendorProduct(VendorProduct vp,
         Function<Integer, List<CategoryRequestRespond>> mapper)

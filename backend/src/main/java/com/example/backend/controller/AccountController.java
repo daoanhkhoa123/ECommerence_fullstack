@@ -10,16 +10,14 @@ import com.example.backend.dto.VendorRespond;
 import com.example.backend.service.AccountService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
 
     private final AccountService accountService;
-
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
 
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<CustomerRespond> getCustomer(@PathVariable Integer customerId)

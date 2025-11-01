@@ -16,8 +16,9 @@ import com.example.backend.dto.ProductVendorRequest;
 import com.example.backend.dto.VendorProductRespond;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
@@ -25,15 +26,6 @@ public class ProductController {
     private final CategoryService categoryService;
     private final ProductService productService;
     private final VendorProductService vendorProductService;
-
-    public ProductController(
-            ProductService productService,
-            CategoryService categoryService,
-            VendorProductService vendorProductService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.vendorProductService = vendorProductService;
-    }
 
     @GetMapping("/vendor-product/{vendorId}")
     public ResponseEntity<List<VendorProductRespond>> getVendorProduct(
