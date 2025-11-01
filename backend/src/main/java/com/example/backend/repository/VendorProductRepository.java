@@ -9,10 +9,7 @@ import com.example.backend.entity.VendorProduct;
 
 @Repository
 public interface VendorProductRepository extends JpaRepository<VendorProduct, Integer> {
-
-       
        List<VendorProduct> findByVendorId(Integer vendorId);
-
        void deleteByProductId(Integer productId);
 
        // @Query("SELECT vp.product FROM VendorProduct vp WHERE vp.vendor.id = :vendorId")

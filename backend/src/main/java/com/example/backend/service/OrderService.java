@@ -13,21 +13,29 @@ import com.example.backend.dto.PaymentRequest;
 import com.example.backend.dto.PaymentRespond;
 import com.example.backend.dto.UpdateOrderStatusRequest;
 import com.example.backend.entity.Order;
+import com.example.backend.entity.OrderItem;
 import com.example.backend.entity.Payment;
+import com.example.backend.entity.VendorProduct;
 import com.example.backend.enums.OrderStatus;
+import com.example.backend.repository.OrderItemRepository;
 import com.example.backend.repository.OrderRepository;
 
 @Service
 @Transactional
 public class OrderService {
 
+    private final OrderItemRepository orderItemRepository;
+
     private final PaymentRepository paymentRepository;
 
     private final OrderRepository orderRepository;
 
-    public OrderService(OrderRepository orderRepository, PaymentRepository paymentRepository) {
+    public OrderService(OrderRepository orderRepository, 
+        PaymentRepository paymentRepository, 
+        OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public List<OrderRespond> findOrderByCustomerId(Integer customerId) {
@@ -76,7 +84,14 @@ public class OrderService {
         if (cart.getTotalAmount().compareTo(request.paidAmount()) > 0)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
                 "Insufficient payment amount");
-    
+            
+        for (OrderItem orderItem : orderItemRepository.findByOrder(cart)) {
+                VendorProduct vp = orderItem.getVendorProduct();
+                vp.setStock(vp.getStock()-1);
+                orderItem.setVendorProduct(vp);
+                orderItemRepository.save(orderItem);
+        }
+
         cart.setOrderStatus(OrderStatus.PAID);
         orderRepository.save(cart);
 
