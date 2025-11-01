@@ -1,7 +1,7 @@
 CREATE TABLE orders(
     order_id SERIAL PRIMARY KEY,
     customer_id INT NOT NULL REFERENCES customers(customer_id),
-    order_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    order_status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
     total_amount NUMERIC(12,2) DEFAULT 0 CHECK (total_amount >= 0),
     shipping_address TEXT NOT NULL,
     placed_at TIMESTAMP DEFAULT now()

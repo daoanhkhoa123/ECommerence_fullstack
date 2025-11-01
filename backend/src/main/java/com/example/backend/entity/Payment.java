@@ -1,7 +1,7 @@
 package com.example.backend.entity;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.example.backend.enums.OrderStatus;
 import com.example.backend.enums.PaymentMethod;
@@ -49,5 +49,5 @@ public class Payment extends BaseEntity{
     private BigDecimal paidAmount;
 
     @Column(name = "paid_at")
-    private Date paidAt;
+    private LocalDateTime paidAt;
 }

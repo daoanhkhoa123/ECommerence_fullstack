@@ -101,13 +101,7 @@ public class OrderItemService {
         return buildRespondByOrderItem(orderItem);
     }
 
-        public List<OrderItemProductRespond> findAllOrderItemProductInCart(Integer customerId)
-        {
-                Integer cartId = orderRepository.findFirstByCustomerIdAndOrderStatus(customerId, OrderStatus.PENDING)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "No pending cart found for customer with id: " + customerId)).getId();
-                return findAllOrderItemProductByOrderId(customerId, cartId);
-        }
+
 
         public List<OrderItemProductRespond> findAllOrderItemProductByOrderId(Integer customerId, Integer orderId) {
         Order order = orderRepository.findById(orderId)
@@ -123,7 +117,10 @@ public class OrderItemService {
                         .toList();
         }
 
-
+        public List<OrderItemProductRespond> findAllOrderItemProductInCart(Integer customerId, Order cart)
+        {
+                return findAllOrderItemProductByOrderId(customerId, cart.getId());
+        }
 
     public void deleteOrderItem(Integer customerId, Integer orderItemId)
     {

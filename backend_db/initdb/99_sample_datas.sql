@@ -6,10 +6,10 @@
 -- === Accounts ===
 INSERT INTO accounts (email, password_hash, role)
 VALUES 
-    ('alice@example.com', 'hashed_pwd_1', 'customer'),
-    ('bob@example.com', 'hashed_pwd_2', 'customer'),
-    ('shop1@example.com', 'hashed_pwd_3', 'vendor'),
-    ('shop2@example.com', 'hashed_pwd_4', 'vendor');
+    ('alice@example.com', 'hashed_pwd_1', 'CUSTOMER'),
+    ('bob@example.com', 'hashed_pwd_2', 'CUSTOMER'),
+    ('shop1@example.com', 'hashed_pwd_3', 'VENDOR'),
+    ('shop2@example.com', 'hashed_pwd_4', 'VENDOR');
 
 -- === Customers ===
 INSERT INTO customers (account_id, full_name, phone, address)
@@ -57,8 +57,8 @@ VALUES
 -- === Orders ===
 INSERT INTO orders (customer_id, order_status, total_amount, shipping_address)
 VALUES
-    (1, 'pending', 25900000, '123 Main Street, Hanoi'),
-    (2, 'paid', 41000000, '456 Second Ave, HCMC');
+    (1, 'PENDING', 25900000, '123 Main Street, Hanoi'),
+    (2, 'PAID', 41000000, '456 Second Ave, HCMC');
 
 -- === Order Items ===
 INSERT INTO orders_items (order_id, vendor_product_id, quantity)
@@ -69,7 +69,7 @@ VALUES
     (2, 3, 1);
 
 -- === Payments ===
-INSERT INTO payments (order_id, payment_method, payment_status, transaction_ref, paid_amount, paid_at)
+INSERT INTO payments (order_id, payment_method, transaction_ref, paid_amount, paid_at)
 VALUES
     (1, 'cod', NULL, NULL, NULL),
     (2, 'credit_card', 'TXN123456', 41000000, now());

@@ -3,7 +3,7 @@ CREATE TABLE orders_items(
     order_id INT NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE,
     vendor_product_id INT NOT NULL REFERENCES vendors_products(vendor_product_id),
     quantity INT NOT NULL CHECK (quantity > 0),
-    subtotal NUMERIC(12,2) GENERATED ALWAYS AS (quantity * price) STORED
+    subtotal NUMERIC(12,2)
     
 )
 INHERITS (base_entity);

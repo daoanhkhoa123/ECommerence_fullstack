@@ -6,13 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.backend.dto.OrderRespond;
+import com.example.backend.dto.PaymentRequest;
+import com.example.backend.dto.PaymentRespond;
 import com.example.backend.dto.OrderItemProductRequest;
 import com.example.backend.dto.OrderItemProductRespond;
 import com.example.backend.dto.UpdateOrderStatusRequest;
+import com.example.backend.entity.Order;
 import com.example.backend.service.OrderItemService;
 import com.example.backend.service.OrderService;
 
 import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -54,13 +58,23 @@ public class OrderController {
 
     @GetMapping("/customer/{customerId}/cart")
     ResponseEntity<List<OrderItemProductRespond>> getFullCart(
-        @PathVariable Integer customerId,
-        @PathVariable Integer orderId
+        @PathVariable Integer customerId
     )
     {
-        List<OrderItemProductRespond> respond = orderItemService.findAllOrderItemProductByOrderId(customerId, orderId);
+        Order cart = orderService.findCartByCustomerId(customerId);
+        List<OrderItemProductRespond> respond = orderItemService.findAllOrderItemProductInCart(customerId, cart);
         return ResponseEntity.ok(respond);
     }
+
+    @PostMapping("/customer/{customerId}/cart/pay")
+    public ResponseEntity<PaymentRespond> payCart(
+        @PathVariable Integer customerId, 
+        @Valid @RequestBody PaymentRequest request) {
+            
+        PaymentRespond respond = orderService.payCart(customerId, request);
+        return ResponseEntity.ok(respond);
+    }
+    
 
     @PostMapping("/customer/{customerId}/create-items")
     public ResponseEntity<OrderItemProductRespond> createOrderItemProduct(

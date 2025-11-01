@@ -1,7 +1,7 @@
 CREATE TABLE payments(
     payment_id SERIAL PRIMARY KEY,
     order_id INT UNIQUE NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE,
-    payment_method VARCHAR(30) NOT NULL CHECK (payment_method IN ('credit_card', 'paypal', 'bank_transfer', 'cod')),
+    payment_method VARCHAR(30) NOT NULL,
     transaction_ref VARCHAR(100),
     paid_amount NUMERIC(12,2) CHECK (paid_amount >= 0),
     paid_at TIMESTAMP
