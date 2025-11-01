@@ -1,13 +1,10 @@
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 
 WORKDIR /app
 
-# Copy your already-built JAR into the container
-COPY target/*.jar app.jar
-
-# Set timezone (optional)
-ENV TZ=Asia/Saigon
+COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 3100
+ENV TZ=Asia/Ho_Chi_Minh
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

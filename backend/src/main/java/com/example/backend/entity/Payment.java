@@ -3,8 +3,8 @@ package com.example.backend.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.example.backend.enums.OrderStatus;
 import com.example.backend.enums.PaymentMethod;
-import com.example.backend.enums.PaymentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +40,7 @@ public class Payment extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 20)
-    private PaymentStatus paymentStatus;
+    private OrderStatus paymentStatus;
 
     @Column(name = "transaction_ref", length = 100)
     private String transactionRef;

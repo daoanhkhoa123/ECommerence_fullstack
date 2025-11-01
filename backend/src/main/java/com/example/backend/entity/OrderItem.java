@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,17 +37,13 @@ public class OrderItem extends BaseEntity{
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
-
-    @Column(name = "subtotal" ,nullable = false, precision = 12, scale = 2)
+    @Column(name = "subtotal" ,nullable = false, precision = 12, scale = 2, insertable = false, updatable = false)
     private BigDecimal subTotal;
 
     @PrePersist 
-    @Override
-    protected void onCreate() {
-        price = vendorProduct.getPrice();
+    @PreUpdate
+    protected void calculateSubTotal() {
+        BigDecimal price = vendorProduct.getPrice();
         subTotal = price.multiply(BigDecimal.valueOf(quantity));
-        super.onCreate();
     }
 }

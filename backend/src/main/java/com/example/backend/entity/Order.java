@@ -5,9 +5,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.backend.enums.OrderStatus;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +40,8 @@ public class Order extends BaseEntity{
     private Customer customer;
 
     @Column(name = "order_status", nullable = false, length = 20)
-    private String orderStatus = "pending";
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.PENDING;
 
     @Column(name = "total_amount", nullable = false, precision=12, scale = 2)
     private BigDecimal totalAmount;
@@ -45,7 +50,7 @@ public class Order extends BaseEntity{
     private String shippingAddress;
 
     @Column(name = "placed_at")
-    private LocalDateTime placeAt = LocalDateTime.now();
+    private LocalDateTime orderTime = LocalDateTime.now();
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();

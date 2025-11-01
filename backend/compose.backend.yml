@@ -1,0 +1,13 @@
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+    container_name: backend-app
+    # depends_on:
+    #   - backend_db
+    environment:
+      DATABASE_URL: postgresql://backend_db:5432/backend_db
+      DATABASE_USER: admin_backend
+      DATABASE_PASSWORD: admin123
+    ports:
+      - "8080:3100"

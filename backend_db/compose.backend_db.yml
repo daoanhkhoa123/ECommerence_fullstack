@@ -1,0 +1,20 @@
+services:
+  backend_db:
+    image: postgres:16
+    container_name: postgres-backend
+    restart: always
+    environment:
+      POSTGRES_USER: admin_backend
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: backend_db
+      TZ: Asia/Saigon
+    command: >
+      bash -c "ln -sf /usr/share/zoneinfo/Asia/Ho_Chi_Minh /usr/share/zoneinfo/Asia/Saigon &&
+               docker-entrypoint.sh postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - backend_pgdata:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+volumes:
+  backend_pgdata:

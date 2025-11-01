@@ -1,0 +1,17 @@
+services:
+    aimodule_db:
+      image: postgres:16
+      container_name: postgres-aimodule
+      restart: always
+      environment:
+        POSTGRES_USER: admin_aimodule
+        POSTGRES_PASSWORD: admin123
+        POSTGRES_DB: aimodule_db
+      ports:
+        - "5433:5432"
+      volumes:
+        - aimodule_pgdata:/var/lib/postgresql/data
+        - ./initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  aimodule_pgdata:
