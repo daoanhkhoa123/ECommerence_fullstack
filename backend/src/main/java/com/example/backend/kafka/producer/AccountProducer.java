@@ -3,13 +3,16 @@ package com.example.backend.kafka.producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
 
 import com.example.backend.entity.Customer;
+import com.example.backend.entity.Vendor;
 import com.example.backend.kafka.dto.CustomerEvent;
 import com.example.backend.kafka.dto.VendorEvent;
 import com.example.backend.kafka.enums.AccountTopic;
-import com.example.backend.kafka.enums.CUDType;
+import com.example.backend.kafka.enums.CRUDType;
 
+@Service
 public class AccountProducer {
     private static final Logger logger = LoggerFactory.getLogger(AccountProducer.class);
     private final KafkaTemplate<String, CustomerEvent> customerTemplate;
@@ -21,8 +24,14 @@ public class AccountProducer {
         this.customerTemplate = customerTemplate;
         this.vendorTemplate = vendorTemplate;
     }
+    
+    public CustomerEvent buildFromCustomer(CRUDType evenType, Integer id)
+    {
+        return new CustomerEvent(evenType, id, 
+        null, null, null, null, null);
+    }
 
-    public CustomerEvent buildFromCustomer(CUDType evenType, Customer customer) {
+    public CustomerEvent buildFromCustomer(CRUDType evenType, Customer customer) {
         return new CustomerEvent(
             evenType,                     
             customer.getId(),
@@ -34,10 +43,27 @@ public class AccountProducer {
         );
     }
 
-    // public VendorEvent buildFromVendor(CUDType evenType, Vendor vendor)
-    // {
-        
-    // }
+    public VendorEvent buildFromVendor(CRUDType evenType, Integer id)
+    {
+        return new VendorEvent(
+            evenType,
+            id,
+            null,null,null,null
+        );
+    }
+
+
+    public VendorEvent buildFromVendor(CRUDType evenType, Vendor vendor)
+    {
+        return new VendorEvent(
+            evenType,
+            vendor.getId(),
+            vendor.getAccount().getEmail(),
+            vendor.getShopName(),
+            vendor.getDescription(),
+            vendor.getPhone()
+        );
+    }
 
     public void sendCustomer(CustomerEvent event) {
         customerTemplate.send(AccountTopic.CUSTOMER.getName(), event).whenComplete((result, ex) -> {

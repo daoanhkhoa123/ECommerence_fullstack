@@ -1,9 +1,9 @@
 package com.example.backend.kafka.dto;
 
-import com.example.backend.kafka.enums.CUDType;
+import com.example.backend.kafka.enums.CRUDType;
 
 public record VendorEvent(
-    CUDType eventType,
+    CRUDType eventType,
     Integer vendorId,
 
     String email,

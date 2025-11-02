@@ -2,10 +2,10 @@ package com.example.backend.kafka.dto;
 
 import java.time.LocalDate;
 
-import com.example.backend.kafka.enums.CUDType;
+import com.example.backend.kafka.enums.CRUDType;
 
 public record CustomerEvent(
-    CUDType evenType,
+    CRUDType evenType,
     Integer customerId,
 
     String email,

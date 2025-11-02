@@ -4,3 +4,5 @@ include:
 
   - ./backend_db/compose.backend_db.yml
   - ./backend/compose.backend.yml
+  
+  - ./kafka/compose.kafka.yml
