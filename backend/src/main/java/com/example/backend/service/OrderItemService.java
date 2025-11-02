@@ -99,11 +99,11 @@ public class OrderItemService {
     public VendorProduct decreaseStockByOrderItem(OrderItem orderItem)
     {
         VendorProduct vp = orderItem.getVendorProduct();
-        if (vp.getStock() <= 0)
+        if (vp.getStock() < orderItem.getQuantity())
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     String.format(
-                            "Vendor %s has run out of %s with id %d",
+                            "Vendor %s has not enough %s with id %d",
                             vp.getVendor().getShopName(),
                             vp.getProduct().getName(),
                             vp.getId()
