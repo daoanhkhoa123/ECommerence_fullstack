@@ -7,33 +7,34 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Vendor;
+import com.example.backend.kafka.dto.AuditEvent;
 import com.example.backend.kafka.dto.CustomerEvent;
 import com.example.backend.kafka.dto.VendorEvent;
 import com.example.backend.kafka.enums.AccountTopic;
 import com.example.backend.kafka.enums.CRUDType;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class AccountProducer {
     private static final Logger logger = LoggerFactory.getLogger(AccountProducer.class);
+
+    private final AuditProducer auditProducer;
     private final KafkaTemplate<String, CustomerEvent> customerTemplate;
     private final KafkaTemplate<String, VendorEvent> vendorTemplate;
 
-    public AccountProducer(KafkaTemplate<String, CustomerEvent> customerTemplate,
-        KafkaTemplate<String, VendorEvent> vendorTemplate)
+    public CustomerEvent buildFromCustomer(CRUDType evenType, Integer customerId)
     {
-        this.customerTemplate = customerTemplate;
-        this.vendorTemplate = vendorTemplate;
-    }
-    
-    public CustomerEvent buildFromCustomer(CRUDType evenType, Integer id)
-    {
-        return new CustomerEvent(evenType, id, 
+        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
+        return new CustomerEvent(auditEvent, customerId, 
         null, null, null, null, null);
     }
 
     public CustomerEvent buildFromCustomer(CRUDType evenType, Customer customer) {
+        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
         return new CustomerEvent(
-            evenType,                     
+            auditEvent,                     
             customer.getId(),
             customer.getAccount().getEmail(),
             customer.getFullName(),
@@ -45,8 +46,9 @@ public class AccountProducer {
 
     public VendorEvent buildFromVendor(CRUDType evenType, Integer id)
     {
+        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
         return new VendorEvent(
-            evenType,
+            auditEvent,
             id,
             null,null,null,null
         );
@@ -55,8 +57,9 @@ public class AccountProducer {
 
     public VendorEvent buildFromVendor(CRUDType evenType, Vendor vendor)
     {
+        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
         return new VendorEvent(
-            evenType,
+            auditEvent,
             vendor.getId(),
             vendor.getAccount().getEmail(),
             vendor.getShopName(),

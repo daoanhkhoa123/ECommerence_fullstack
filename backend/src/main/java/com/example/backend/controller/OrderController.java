@@ -27,31 +27,28 @@ public class OrderController {
     }
 
 
-    @PatchMapping("/{customerId}/status/{orderId}")
+    @PatchMapping("/status/{orderId}")
     public ResponseEntity<OrderRespond> updateOrderStatus(
-            @PathVariable Integer customerId,
             @PathVariable Integer orderId,
             @Valid @RequestBody UpdateOrderStatusRequest request) {
-                OrderRespond respond = orderApplication.updateOrderStatus(customerId, orderId, request);
+                OrderRespond respond = orderApplication.updateOrderStatus(orderId, request);
         return ResponseEntity.ok(respond);
     }
 
-    @GetMapping("/{customerId}/get/{orderId}")
+    @GetMapping("/get/{orderId}")
     ResponseEntity<List<OrderItemProductRespond>> getFullOrder(
-        @PathVariable Integer customerId,
         @PathVariable Integer orderId
     )
     {
-        List<OrderItemProductRespond> respond = orderApplication.findAllOrderItemProductByOrderId(customerId, orderId);
+        List<OrderItemProductRespond> respond = orderApplication.findAllOrderItemProductByOrderId(orderId);
         return ResponseEntity.ok(respond);
     }
 
-    @GetMapping("/{customerId}/cart")
+    @GetMapping("/cart")
     ResponseEntity<List<OrderItemProductRespond>> getFullCart(
-        @PathVariable Integer customerId
     )
     {
-        List<OrderItemProductRespond> respond = orderApplication.findAllOrderItemProductInCart(customerId);
+        List<OrderItemProductRespond> respond = orderApplication.findAllOrderItemProductInCart();
         return ResponseEntity.ok(respond);
     }
 
@@ -64,23 +61,22 @@ public class OrderController {
         return ResponseEntity.ok(respond);
     }
 
-    @GetMapping("/{customerId}/get-items/{orderItemId}")
+    @GetMapping("/get-items/{orderItemId}")
     public ResponseEntity<OrderItemProductRespond> getOrderItemProduct(
-        @PathVariable Integer customerId,
         @PathVariable Integer orderItemId
     )
     {
-        OrderItemProductRespond respond = orderApplication.findOrderItemProduct(customerId, orderItemId);
+        OrderItemProductRespond respond = orderApplication.findOrderItemProduct(orderItemId);
         return ResponseEntity.ok(respond);
     }
 
-    @PatchMapping("/{customerId}/delete-items/{orderItemId}")
+    @PatchMapping("/delete-items/{orderItemId}")
     public ResponseEntity<Void> deleteOrderItemProduct(
         @PathVariable Integer customerId,
         @PathVariable Integer orderItemId
     )
     {
-        orderApplication.deleteOrderItem(customerId, orderItemId);  
+        orderApplication.deleteOrderItem(orderItemId);  
         return ResponseEntity.noContent().build();
     }
 }

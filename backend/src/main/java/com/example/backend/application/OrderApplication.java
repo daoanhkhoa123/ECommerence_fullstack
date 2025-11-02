@@ -13,6 +13,7 @@ import com.example.backend.entity.OrderItem;
 import com.example.backend.entity.Product;
 import com.example.backend.entity.Vendor;
 import com.example.backend.entity.VendorProduct;
+import com.example.backend.service.AuthencationService;
 import com.example.backend.service.OrderItemService;
 import com.example.backend.service.OrderService;
 
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderApplication {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
+    private final AuthencationService authencationService;
 
     private OrderRespond buidFromOrder(Order order)
     {
@@ -59,16 +61,18 @@ public class OrderApplication {
         .map(this::buidFromOrder).toList();
     }
 
-    public OrderRespond updateOrderStatus(Integer customerId, 
-    Integer orderId, UpdateOrderStatusRequest request)
+    public OrderRespond updateOrderStatus(Integer orderId, UpdateOrderStatusRequest request)
     {
+        Integer customerId = authencationService.findCurrentCustomerId();
+
         Order order = orderService.updateOrderStatus(customerId, orderId, request);
         return buidFromOrder(order);
     }
 
-    public List<OrderItemProductRespond> findAllOrderItemProductByOrderId(Integer customerId, 
-        Integer orderId)
+    public List<OrderItemProductRespond> findAllOrderItemProductByOrderId(Integer orderId)
     {
+        Integer customerId = authencationService.findCurrentCustomerId();
+
         List<OrderItemProductRespond> responds = orderItemService.
         findAllOrderItemProductByOrderId(customerId, orderId).stream()
         .map(this::buildFromOrderItem).toList();
@@ -76,10 +80,12 @@ public class OrderApplication {
         return responds;
     }
 
-    public List<OrderItemProductRespond> findAllOrderItemProductInCart(Integer customerId)
+    public List<OrderItemProductRespond> findAllOrderItemProductInCart()
     {
+        Integer customerId = authencationService.findCurrentCustomerId();
+
         Order cart = orderService.findCartByCustomerId(customerId);
-        List<OrderItemProductRespond> respond = findAllOrderItemProductByOrderId(customerId, cart.getId());
+        List<OrderItemProductRespond> respond = findAllOrderItemProductByOrderId(cart.getId());
 
         return respond;
     }
@@ -91,17 +97,19 @@ public class OrderApplication {
         return buildFromOrderItem(orderItem);
     }
 
-    public OrderItemProductRespond findOrderItemProduct(Integer customerId, 
-        Integer orderItemId)
+    public OrderItemProductRespond findOrderItemProduct(Integer orderItemId)
     {
+        Integer customerId = authencationService.findCurrentCustomerId();
+
         OrderItem orderItem = orderItemService.findOrderItemProduct(customerId, orderItemId);
 
         return buildFromOrderItem(orderItem);
     }
 
-    public void deleteOrderItem(Integer customerId, 
-        Integer orderItemId)
+    public void deleteOrderItem(Integer orderItemId)
     {
+        Integer customerId = authencationService.findCurrentCustomerId();
+
         orderItemService.deleteOrderItem(customerId, orderItemId);
     }
 

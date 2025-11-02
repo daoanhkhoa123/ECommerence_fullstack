@@ -26,7 +26,6 @@ public class CategoryApplication {
         category.getDescription(), category.getId());
     }
 
-
     public CategoryRequestRespond findCategoryById(Integer id)
     {
         Category category = categoryService.findCategoryById(id);
