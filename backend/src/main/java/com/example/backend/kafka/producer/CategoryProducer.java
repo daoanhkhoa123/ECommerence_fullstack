@@ -1,52 +1,76 @@
 package com.example.backend.kafka.producer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.entity.Category;
-import com.example.backend.kafka.dto.AuditEvent;
-import com.example.backend.kafka.dto.CategoryEvent;
-import com.example.backend.kafka.enums.CRUDType;
+import com.example.backend.kafka.dto.CategoryCreateUpdateEvent;
+import com.example.backend.kafka.dto.CategoryReadDeleteEvent;
+import com.example.backend.kafka.dto.ProductCategoryCreateDeleteEvent;
+import com.example.backend.kafka.enums.KafkaTopic;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class CategoryProducer {
-    private static final Logger logger = LoggerFactory.getLogger(AccountProducer.class);
+
+    private final KafkaTemplate<String, CategoryCreateUpdateEvent> categoryCreateUpdateTemplate;
+    private final KafkaTemplate<String, CategoryReadDeleteEvent> categoryReadDeleteTemplate;
+    private final KafkaTemplate<String, ProductCategoryCreateDeleteEvent> productCategoryCreateDeleteTemplate;
+
+    // -------- BUILDERS --------
+
+    public CategoryCreateUpdateEvent buildCategoryCreateUpdate(Integer actorId, Category category) {
+        return new CategoryCreateUpdateEvent(
+            actorId,
+            category.getId(),
+            category.getName(),
+            category.getDescription()
+        );
+    }
+
+    public CategoryReadDeleteEvent buildCategoryReadDelete(Integer actorId, Integer categoryId) {
+        return new CategoryReadDeleteEvent(
+            actorId,
+            categoryId
+        );
+    }
+
+    // -------- SENDERS --------
+
+    public void sendCategoryCreated(CategoryCreateUpdateEvent event) {
+        categoryCreateUpdateTemplate.send(KafkaTopic.CATEGORY_CREATE.getName(), event);
+    }
+
+    public void sendCategoryUpdated(CategoryCreateUpdateEvent event) {
+        categoryCreateUpdateTemplate.send(KafkaTopic.CATEGORY_UPDATE.getName(), event);
+    }
+
+    public void sendCategoryRead(CategoryReadDeleteEvent event) {
+        categoryReadDeleteTemplate.send(KafkaTopic.CATEGORY_READ.getName(), event);
+    }
+
+    public void sendCategoryDeleted(CategoryReadDeleteEvent event) {
+        categoryReadDeleteTemplate.send(KafkaTopic.CATEGORY_DELETE.getName(), event);
+    }
+
+    public void sendProductCategoryCreated(Integer actorId, Integer productId, List<Integer> categoryIds)
+    {
+        ProductCategoryCreateDeleteEvent event = new ProductCategoryCreateDeleteEvent(
+            actorId, productId, categoryIds);
+
+        productCategoryCreateDeleteTemplate.send(KafkaTopic.PRODUCT_CATEGORY_CREATE.getName(), event);
+    }
+
+    public void sendProductCategoryDeleted(Integer actorId, Integer productId, List<Integer> categoryIds)
+    {
+        ProductCategoryCreateDeleteEvent event = new ProductCategoryCreateDeleteEvent(
+            actorId, productId, categoryIds);
+
+        productCategoryCreateDeleteTemplate.send(KafkaTopic.PRODUCT_CATEGORY_DELETE.getName(), event);
+    }
     
-    private final AuditProducer auditProducer;
-    private final KafkaTemplate<String, CategoryEvent> categoryTemplate;
-
-    public CategoryEvent buildFromCategory(CRUDType eventType, Category category)
-    {
-        AuditEvent auditEvent = auditProducer.buildAuditEvent(eventType);
-        return new CategoryEvent(auditEvent, 
-            category.getId(), category.getName(), category.getDescription());
-    }
-
-    public CategoryEvent builCategoryEvent(CRUDType eventType, Integer categoryId)
-    {
-        AuditEvent auditEvent = auditProducer.buildAuditEvent(eventType);
-        return new CategoryEvent(auditEvent, 
-            categoryId, null, null);
-    }
-
-    public void sendCategory(CategoryEvent event) {
-        categoryTemplate.send("category-events", event).whenComplete((result, ex) -> {
-            if (ex != null) {
-                logger.error("Failed to send CategoryEvent [{}] to topic [{}]: {}",
-                        event, "category-events", ex.getMessage(), ex);
-            } else {
-                logger.info("Sent CategoryEvent [{}] to topic [{}] with offset {}, partition {}, timestamp {}",
-                        event, "category-events",
-                        result.getRecordMetadata().offset(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().timestamp());
-            }
-        });
-    }
-
 }

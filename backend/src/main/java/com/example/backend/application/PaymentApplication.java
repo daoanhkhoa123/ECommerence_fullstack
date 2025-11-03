@@ -2,12 +2,14 @@ package com.example.backend.application;
 
 import org.springframework.stereotype.Service;
 
+import com.example.backend.config.JwtService;
 import com.example.backend.dto.PaymentRequest;
 import com.example.backend.dto.PaymentRespond;
 import com.example.backend.entity.Order;
 import com.example.backend.entity.OrderItem;
 import com.example.backend.entity.Payment;
 import com.example.backend.enums.OrderStatus;
+import com.example.backend.kafka.producer.PaymentProducer;
 import com.example.backend.service.OrderItemService;
 import com.example.backend.service.OrderService;
 import com.example.backend.service.PaymentService;
@@ -17,7 +19,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class PaymentApplication {
-
+    private final PaymentProducer paymentProducer;
+    private final JwtService jwtService;
     private final OrderService orderService;
     private final OrderItemService orderItemService;
     private final PaymentService paymentService;
@@ -35,8 +38,9 @@ public class PaymentApplication {
                 payment.getPaidAt());
     }
 
-    public PaymentRespond payCart(Integer customerId, PaymentRequest request)
+    public PaymentRespond payCart(PaymentRequest request)
     {
+        Integer customerId = jwtService.getCurrentUserId();
         // payment saved, decrease stock, and mark cart as paid
         Order cart = orderService.findCartByCustomerId(customerId);
 
@@ -46,7 +50,8 @@ public class PaymentApplication {
             orderItemService.decreaseStockByOrderItem(orderItem);
         }
         orderService.updateOrderStatus(customerId, cart, OrderStatus.PAID);
-
+        
+        paymentProducer.sendPaymentCreate(customerId, null);
         return buildFromPaymet(payment);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.backend.config.JwtService;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Vendor;
 import com.example.backend.repository.CustomerRepository;

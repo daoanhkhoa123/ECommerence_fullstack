@@ -6,9 +6,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.example.backend.config.JwtService;
 import com.example.backend.dto.AuthencationRequest;
 import com.example.backend.dto.AuthencationRespond;
-import com.example.backend.service.JwtService;
 
 import lombok.RequiredArgsConstructor;
 

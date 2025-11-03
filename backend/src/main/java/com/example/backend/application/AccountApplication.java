@@ -2,15 +2,13 @@ package com.example.backend.application;
 
 import org.springframework.stereotype.Service;
 
+import com.example.backend.config.JwtService;
 import com.example.backend.dto.CustomerRequest;
 import com.example.backend.dto.CustomerRespond;
 import com.example.backend.dto.VendorRequest;
 import com.example.backend.dto.VendorRespond;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Vendor;
-import com.example.backend.kafka.dto.CustomerEvent;
-import com.example.backend.kafka.dto.VendorEvent;
-import com.example.backend.kafka.enums.CRUDType;
 import com.example.backend.kafka.producer.AccountProducer;
 import com.example.backend.service.AccountService;
 
@@ -21,93 +19,100 @@ import lombok.RequiredArgsConstructor;
 public class AccountApplication {
     private final AccountProducer accountProducer;
     private final AccountService accountService;
+    private final JwtService jwtService;
 
-    private CustomerRespond buildFromCustomer(Customer cusomter)
-    {
-        return new CustomerRespond(cusomter.getId(), cusomter.getAccount().getEmail(), 
-        cusomter.getFullName(), cusomter.getPhone(), 
-        cusomter.getAddress(), cusomter.getBirthDate());
+    private CustomerRespond buildFromCustomer(Customer customer) {
+        return new CustomerRespond(
+            customer.getId(),
+            customer.getAccount().getEmail(),
+            customer.getFullName(),
+            customer.getPhone(),
+            customer.getAddress(),
+            customer.getBirthDate()
+        );
     }
 
-    private VendorRespond buildFromVendor(Vendor vendor)
-    {
-        return new VendorRespond(vendor.getId(), vendor.getAccount().getEmail(), 
-        vendor.getShopName(), vendor.getDescription(), vendor.getPhone());
+    private VendorRespond buildFromVendor(Vendor vendor) {
+        return new VendorRespond(
+            vendor.getId(),
+            vendor.getAccount().getEmail(),
+            vendor.getShopName(),
+            vendor.getDescription(),
+            vendor.getPhone()
+        );
     }
 
-    public CustomerRespond findCustomerById(Integer customerId)
-    {
+    // -------------------- CUSTOMER --------------------
+
+    public CustomerRespond findCustomerById(Integer customerId) {
+        Integer actorId = jwtService.getCurrentUserId();
         Customer customer = accountService.findCustomerById(customerId);
-        
-        CustomerEvent customerEvent = accountProducer.buildFromCustomer(CRUDType.READ, customerId);
-        accountProducer.sendCustomer(customerEvent);
+
+        accountProducer.sendCustomerRead(actorId, customerId);
 
         return buildFromCustomer(customer);
     }
 
-    public VendorRespond findVendorById(Integer vendorId)
-    {
-        Vendor vendor = accountService.findVendorById(vendorId);
-
-        VendorEvent vendorEvent = accountProducer.buildFromVendor(CRUDType.READ, vendorId);
-        accountProducer.sendVendor(vendorEvent);
-
-        return buildFromVendor(vendor);
-    }
-
-    public CustomerRespond registerCustomer(CustomerRequest request)
-    {
+    public CustomerRespond registerCustomer(CustomerRequest request) {
+        Integer actorId = jwtService.getCurrentUserId();
         Customer customer = accountService.registerCustomer(request);
 
-        CustomerEvent customerEvent = accountProducer.buildFromCustomer(CRUDType.CREATE, customer);
-        accountProducer.sendCustomer(customerEvent);
+        accountProducer.sendCustomerCreated(actorId, customer);
 
         return buildFromCustomer(customer);
     }
 
-    public VendorRespond registerVendor(VendorRequest request)
-    {
-        Vendor vendor = accountService.registerVendor(request);
-
-        VendorEvent vendorEvent = accountProducer.buildFromVendor(CRUDType.CREATE, vendor);
-        accountProducer.sendVendor(vendorEvent); 
-
-        return buildFromVendor(vendor);
-    }
-
-    public CustomerRespond updateCustomer(Integer customerId, CustomerRequest request)
-    {
+    public CustomerRespond updateCustomer(Integer customerId, CustomerRequest request) {
+        Integer actorId = jwtService.getCurrentUserId();
         Customer customer = accountService.updateCustomer(customerId, request);
 
-        CustomerEvent customerEvent = accountProducer.buildFromCustomer(CRUDType.UPDATE, customer);
-        accountProducer.sendCustomer(customerEvent);    
+        accountProducer.sendCustomerUpdated(actorId, customer);
 
         return buildFromCustomer(customer);
     }
 
-    public VendorRespond updateVendor(Integer vendorid, VendorRequest request)
-    {
-        Vendor vendor = accountService.updateVendor(vendorid, request);
+    public void deleteCustomer(Integer customerId) {
+        Integer actorId = jwtService.getCurrentUserId();
 
-        VendorEvent vendorEvent = accountProducer.buildFromVendor(CRUDType.UPDATE, vendor);
-        accountProducer.sendVendor(vendorEvent);
-
-        return buildFromVendor(vendor);
-    }
-
-    public void deleteCustomer(Integer customerId)
-    {
-        CustomerEvent customerEvent = accountProducer.buildFromCustomer(CRUDType.DELETE, customerId);
-        accountProducer.sendCustomer(customerEvent);
+        accountProducer.sendCustomerDeleted(actorId, customerId);
 
         accountService.deleteCustomer(customerId);
     }
 
-    public void deleteVendor(Integer vendorId)
-    {
-        VendorEvent vendorEvent = accountProducer.buildFromVendor(CRUDType.DELETE, vendorId);
-        accountProducer.sendVendor(vendorEvent);
+    // -------------------- VENDOR --------------------
 
+    public VendorRespond findVendorById(Integer vendorId) {
+        Integer actorId = jwtService.getCurrentUserId();
+        Vendor vendor = accountService.findVendorById(vendorId);
+
+        accountProducer.sendVendorRead(actorId, vendorId);
+
+        return buildFromVendor(vendor);
+    }
+
+    public VendorRespond registerVendor(VendorRequest request) {
+        Integer actorId = jwtService.getCurrentUserId();
+        Vendor vendor = accountService.registerVendor(request);
+
+        accountProducer.sendVendorCreated(actorId, vendor);
+
+        return buildFromVendor(vendor);
+    }
+
+    public VendorRespond updateVendor(Integer vendorId, VendorRequest request) {
+        Integer actorId = jwtService.getCurrentUserId();
+        Vendor vendor = accountService.updateVendor(vendorId, request);
+
+        accountProducer.sendVendorUpdated(actorId, vendor);
+
+        return buildFromVendor(vendor);
+    }
+
+    public void deleteVendor(Integer vendorId) {
+        Integer actorId = jwtService.getCurrentUserId();
         accountService.deleteVendor(vendorId);
+
+        accountProducer.sendVendorDeleted(actorId, vendorId);
+
     }
 }

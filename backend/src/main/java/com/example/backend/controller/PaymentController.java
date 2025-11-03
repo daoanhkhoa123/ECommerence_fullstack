@@ -1,7 +1,6 @@
 package com.example.backend.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +20,11 @@ public class PaymentController {
 
     private final PaymentApplication paymentApplication;
 
-    @PostMapping("/{customerId}/cart/pay")
+    @PostMapping("/cart/pay")
     public ResponseEntity<PaymentRespond> payCart(
-            @PathVariable Integer customerId,
             @Valid @RequestBody PaymentRequest request) {
 
-        PaymentRespond respond = paymentApplication.payCart(customerId, request);
+        PaymentRespond respond = paymentApplication.payCart(request);
         return ResponseEntity.ok(respond);
     }
 }

@@ -69,7 +69,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategorById(Integer categoryId) {
+    public void deleteCategoryById(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
@@ -79,8 +79,6 @@ public class CategoryService {
         // Then delete the category itself
         categoryRepository.delete(category);
     }    
-
-
 
     
 }

@@ -1,7 +1,7 @@
 package com.example.backend.kafka.dto;
 
-public record VendorEvent(
-    AuditEvent auditEvent,    
+public record VendorCreateUpdateEvent(
+    Integer actorId,    
 
     Integer vendorId,
     String email,

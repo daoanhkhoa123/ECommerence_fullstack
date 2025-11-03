@@ -57,7 +57,7 @@ public class OrderController {
             @PathVariable Integer customerId,
             @Valid @RequestBody OrderItemProductRequest request) {
 
-            OrderItemProductRespond respond = orderApplication.createOrderItemProduct(customerId, request);
+            OrderItemProductRespond respond = orderApplication.createOrderItemProduct(request);
         return ResponseEntity.ok(respond);
     }
 

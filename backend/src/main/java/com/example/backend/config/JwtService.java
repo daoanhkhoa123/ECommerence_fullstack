@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;

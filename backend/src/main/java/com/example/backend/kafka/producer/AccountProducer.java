@@ -1,40 +1,32 @@
 package com.example.backend.kafka.producer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Vendor;
-import com.example.backend.kafka.dto.AuditEvent;
-import com.example.backend.kafka.dto.CustomerEvent;
-import com.example.backend.kafka.dto.VendorEvent;
-import com.example.backend.kafka.enums.AccountTopic;
-import com.example.backend.kafka.enums.CRUDType;
+import com.example.backend.kafka.dto.CustomerCreateUpdateEvent;
+import com.example.backend.kafka.dto.CustomerReadDeleteEvent;
+import com.example.backend.kafka.dto.VendorCreateUpdateEvent;
+import com.example.backend.kafka.dto.VendorReadDeleteEvent;
+import com.example.backend.kafka.enums.KafkaTopic;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class AccountProducer {
-    private static final Logger logger = LoggerFactory.getLogger(AccountProducer.class);
 
-    private final AuditProducer auditProducer;
-    private final KafkaTemplate<String, CustomerEvent> customerTemplate;
-    private final KafkaTemplate<String, VendorEvent> vendorTemplate;
+    private final KafkaTemplate<String, CustomerCreateUpdateEvent> customerCreateUpdateTemplate;
+    private final KafkaTemplate<String, CustomerReadDeleteEvent> customerReadDeleteTemplate;
+    private final KafkaTemplate<String, VendorCreateUpdateEvent> vendorCreateUpdateTemplate;
+    private final KafkaTemplate<String, VendorReadDeleteEvent> vendorReadDeleteTemplate;
 
-    public CustomerEvent buildFromCustomer(CRUDType evenType, Integer customerId)
-    {
-        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
-        return new CustomerEvent(auditEvent, customerId, 
-        null, null, null, null, null);
-    }
+    // -------------------- CUSTOMER --------------------
 
-    public CustomerEvent buildFromCustomer(CRUDType evenType, Customer customer) {
-        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
-        return new CustomerEvent(
-            auditEvent,                     
+    private CustomerCreateUpdateEvent buildCustomerCreateUpdate(Integer actorId, Customer customer) {
+        return new CustomerCreateUpdateEvent(
+            actorId,
             customer.getId(),
             customer.getAccount().getEmail(),
             customer.getFullName(),
@@ -44,22 +36,35 @@ public class AccountProducer {
         );
     }
 
-    public VendorEvent buildFromVendor(CRUDType evenType, Integer id)
-    {
-        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
-        return new VendorEvent(
-            auditEvent,
-            id,
-            null,null,null,null
-        );
+    private CustomerReadDeleteEvent buildCustomerReadDelete(Integer actorId, Integer customerId) {
+        return new CustomerReadDeleteEvent(actorId, customerId);
     }
 
+    public void sendCustomerCreated(Integer actorId, Customer customer) {
+        CustomerCreateUpdateEvent event = buildCustomerCreateUpdate(actorId, customer);
+        customerCreateUpdateTemplate.send(KafkaTopic.CUSTOMER_CREATE.getName(), event);
+    }
 
-    public VendorEvent buildFromVendor(CRUDType evenType, Vendor vendor)
-    {
-        AuditEvent auditEvent = auditProducer.buildAuditEvent(evenType);
-        return new VendorEvent(
-            auditEvent,
+    public void sendCustomerUpdated(Integer actorId, Customer customer) {
+        CustomerCreateUpdateEvent event = buildCustomerCreateUpdate(actorId, customer);
+        customerCreateUpdateTemplate.send(KafkaTopic.CUSTOMER_UPDATE.getName(), event);
+    }
+
+    public void sendCustomerRead(Integer actorId, Integer customerId) {
+        CustomerReadDeleteEvent event = buildCustomerReadDelete(actorId, customerId);
+        customerReadDeleteTemplate.send(KafkaTopic.CUSTOMER_READ.getName(), event);
+    }
+
+    public void sendCustomerDeleted(Integer actorId, Integer customerId) {
+        CustomerReadDeleteEvent event = buildCustomerReadDelete(actorId, customerId);
+        customerReadDeleteTemplate.send(KafkaTopic.CUSTOMER_DELETE.getName(), event);
+    }
+
+    // -------------------- VENDOR --------------------
+
+    private VendorCreateUpdateEvent buildVendorCreateUpdate(Integer actorId, Vendor vendor) {
+        return new VendorCreateUpdateEvent(
+            actorId,
             vendor.getId(),
             vendor.getAccount().getEmail(),
             vendor.getShopName(),
@@ -68,33 +73,27 @@ public class AccountProducer {
         );
     }
 
-    public void sendCustomer(CustomerEvent event) {
-        customerTemplate.send(AccountTopic.CUSTOMER.getName(), event).whenComplete((result, ex) -> {
-            if (ex != null) {
-                logger.error("Failed to send CustomerEvent [{}] to topic [{}]: {}",
-                        event, AccountTopic.CUSTOMER.getName(), ex.getMessage(), ex);
-            } else {
-                logger.info("Sent CustomerEvent [{}] to topic [{}] with offset {}, partition {}, timestamp {}",
-                        event, AccountTopic.CUSTOMER.getName(),
-                        result.getRecordMetadata().offset(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().timestamp());
-            }
-        });
+    private VendorReadDeleteEvent buildVendorReadDelete(Integer actorId, Integer vendorId) {
+        return new VendorReadDeleteEvent(actorId, vendorId);
     }
 
-    public void sendVendor(VendorEvent event) {
-        vendorTemplate.send(AccountTopic.VENDOR.getName(), event).whenComplete((result, ex) -> {
-            if (ex != null) {
-                logger.error("Failed to send VendorEvent [{}] to topic [{}]: {}",
-                        event, AccountTopic.VENDOR.getName(), ex.getMessage(), ex);
-            } else {
-                logger.info("Sent VendorEvent [{}] to topic [{}] with offset {}, partition {}, timestamp {}",
-                        event, AccountTopic.VENDOR.getName(),
-                        result.getRecordMetadata().offset(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().timestamp());
-            }
-        });
+    public void sendVendorCreated(Integer actorId, Vendor vendor) {
+        VendorCreateUpdateEvent event = buildVendorCreateUpdate(actorId, vendor);
+        vendorCreateUpdateTemplate.send(KafkaTopic.VENDOR_CREATE.getName(), event);
+    }
+
+    public void sendVendorUpdated(Integer actorId, Vendor vendor) {
+        VendorCreateUpdateEvent event = buildVendorCreateUpdate(actorId, vendor);
+        vendorCreateUpdateTemplate.send(KafkaTopic.VENDOR_UPDATE.getName(), event);
+    }
+
+    public void sendVendorRead(Integer actorId, Integer vendorId) {
+        VendorReadDeleteEvent event = buildVendorReadDelete(actorId, vendorId);
+        vendorReadDeleteTemplate.send(KafkaTopic.VENDOR_READ.getName(), event);
+    }
+
+    public void sendVendorDeleted(Integer actorId, Integer vendorId) {
+        VendorReadDeleteEvent event = buildVendorReadDelete(actorId, vendorId);
+        vendorReadDeleteTemplate.send(KafkaTopic.VENDOR_DELETE.getName(), event);
     }
 }
