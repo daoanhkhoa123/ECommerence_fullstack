@@ -18,14 +18,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class OrderProducer {
-    private final KafkaTemplate<String, OrderStatusUpdateEvent> orderStatusUpdateTemplate;
-    private final KafkaTemplate<String, OrderItemCreateEvent> orderItemCreateTemplate;
-    private final KafkaTemplate<String, OrderItemDeleteEvent> orderItemDeleteTemplate;
 
-    public void sendorderStatusUpdate(Integer actorId, Integer orderId, OrderStatus orderStatus)
-    {
-        OrderStatusUpdateEvent event = new OrderStatusUpdateEvent(actorId, orderId, orderStatus);
-        orderStatusUpdateTemplate.send( KafkaTopic.ORDER_STATUS_UPDATED.getName(), event);
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    public void sendOrderStatusUpdate(Integer actorId, Integer orderId, OrderStatus orderStatus) {
+        kafkaTemplate.send(
+            KafkaTopic.ORDER_STATUS_UPDATED.getName(),
+            new OrderStatusUpdateEvent(actorId, orderId, orderStatus)
+        );
     }
 
     public void sendOrderItemCreate(Integer actorId, OrderItem orderItem) {
@@ -33,25 +33,26 @@ public class OrderProducer {
         Vendor vendor = vendorProduct.getVendor();
         Product product = vendorProduct.getProduct();
 
-        OrderItemCreateEvent event = new OrderItemCreateEvent(
-            actorId,
-            orderItem.getId(),
-            vendorProduct.getId(),
-            orderItem.getQuantity(),
-            orderItem.getSubTotal(),
-            vendor.getShopName(),
-            vendor.getPhone(),
-            product.getName(),
-            product.getBrand()
+        kafkaTemplate.send(
+            KafkaTopic.ORDER_ITEM_CREATE.getName(),
+            new OrderItemCreateEvent(
+                actorId,
+                orderItem.getId(),
+                vendorProduct.getId(),
+                orderItem.getQuantity(),
+                orderItem.getSubTotal(),
+                vendor.getShopName(),
+                vendor.getPhone(),
+                product.getName(),
+                product.getBrand()
+            )
         );
-
-        orderItemCreateTemplate.send(KafkaTopic.ORDER_ITEM_CREATE.getName(), event);
     }
 
-    public void sendOrderItemDelete(Integer actorId, Integer orderItemId)
-    {
-        OrderItemDeleteEvent event = new OrderItemDeleteEvent(actorId, orderItemId);
-
-        orderItemDeleteTemplate.send(KafkaTopic.ORDER_ITEM_DELETE.getName(), event);
+    public void sendOrderItemDelete(Integer actorId, Integer orderItemId) {
+        kafkaTemplate.send(
+            KafkaTopic.ORDER_ITEM_DELETE.getName(),
+            new OrderItemDeleteEvent(actorId, orderItemId)
+        );
     }
 }

@@ -12,15 +12,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class PaymentProducer {
-    private final KafkaTemplate<String, PaymentCreateEvent> paymentCreateTemplate;
 
-    public void sendPaymentCreate(Integer actorId, PaymentRespond body)
-    {
-        PaymentCreateEvent event = new PaymentCreateEvent(
-            body.paymentId(), body.orderId(), actorId,
-            body.paymentMethod(), body.paymentStatus(), body.paidAmount(), 
-            body.transactionRef(), body.paidAt());
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-            paymentCreateTemplate.send(KafkaTopic.CART_PAY.getName(), event);
+    public void sendPaymentCreate(Integer actorId, PaymentRespond body) {
+        kafkaTemplate.send(
+            KafkaTopic.CART_PAY.getName(),
+            new PaymentCreateEvent(
+                body.paymentId(),
+                body.orderId(),
+                actorId,
+                body.paymentMethod(),
+                body.paymentStatus(),
+                body.paidAmount(),
+                body.transactionRef(),
+                body.paidAt()
+            )
+        );
     }
 }

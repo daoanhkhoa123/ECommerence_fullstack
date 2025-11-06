@@ -17,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CategoryProducer {
 
-    private final KafkaTemplate<String, CategoryCreateUpdateEvent> categoryCreateUpdateTemplate;
-    private final KafkaTemplate<String, CategoryReadDeleteEvent> categoryReadDeleteTemplate;
-    private final KafkaTemplate<String, ProductCategoryCreateDeleteEvent> productCategoryCreateDeleteTemplate;
+    // ✅ Only one template for all event types
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     // -------- BUILDERS --------
 
-    public CategoryCreateUpdateEvent buildCategoryCreateUpdate(Integer actorId, Category category) {
+    private CategoryCreateUpdateEvent buildCategoryCreateUpdate(Integer actorId, Category category) {
         return new CategoryCreateUpdateEvent(
             actorId,
             category.getId(),
@@ -32,45 +31,39 @@ public class CategoryProducer {
         );
     }
 
-    public CategoryReadDeleteEvent buildCategoryReadDelete(Integer actorId, Integer categoryId) {
-        return new CategoryReadDeleteEvent(
-            actorId,
-            categoryId
-        );
+    private CategoryReadDeleteEvent buildCategoryReadDelete(Integer actorId, Integer categoryId) {
+        return new CategoryReadDeleteEvent(actorId, categoryId);
     }
 
     // -------- SENDERS --------
 
-    public void sendCategoryCreated(CategoryCreateUpdateEvent event) {
-        categoryCreateUpdateTemplate.send(KafkaTopic.CATEGORY_CREATE.getName(), event);
+    public void sendCategoryCreated(Integer actorId, Category category) {
+        kafkaTemplate.send(KafkaTopic.CATEGORY_CREATE.getName(),
+            buildCategoryCreateUpdate(actorId, category));
     }
 
-    public void sendCategoryUpdated(CategoryCreateUpdateEvent event) {
-        categoryCreateUpdateTemplate.send(KafkaTopic.CATEGORY_UPDATE.getName(), event);
+    public void sendCategoryUpdated(Integer actorId, Category category) {
+        kafkaTemplate.send(KafkaTopic.CATEGORY_UPDATE.getName(),
+            buildCategoryCreateUpdate(actorId, category));
     }
 
-    public void sendCategoryRead(CategoryReadDeleteEvent event) {
-        categoryReadDeleteTemplate.send(KafkaTopic.CATEGORY_READ.getName(), event);
+    public void sendCategoryRead(Integer actorId, Integer categoryId) {
+        kafkaTemplate.send(KafkaTopic.CATEGORY_READ.getName(),
+            buildCategoryReadDelete(actorId, categoryId));
     }
 
-    public void sendCategoryDeleted(CategoryReadDeleteEvent event) {
-        categoryReadDeleteTemplate.send(KafkaTopic.CATEGORY_DELETE.getName(), event);
+    public void sendCategoryDeleted(Integer actorId, Integer categoryId) {
+        kafkaTemplate.send(KafkaTopic.CATEGORY_DELETE.getName(),
+            buildCategoryReadDelete(actorId, categoryId));
     }
 
-    public void sendProductCategoryCreated(Integer actorId, Integer productId, List<Integer> categoryIds)
-    {
-        ProductCategoryCreateDeleteEvent event = new ProductCategoryCreateDeleteEvent(
-            actorId, productId, categoryIds);
-
-        productCategoryCreateDeleteTemplate.send(KafkaTopic.PRODUCT_CATEGORY_CREATE.getName(), event);
+    public void sendProductCategoryCreated(Integer actorId, Integer productId, List<Integer> categoryIds) {
+        kafkaTemplate.send(KafkaTopic.PRODUCT_CATEGORY_CREATE.getName(),
+            new ProductCategoryCreateDeleteEvent(actorId, productId, categoryIds));
     }
 
-    public void sendProductCategoryDeleted(Integer actorId, Integer productId, List<Integer> categoryIds)
-    {
-        ProductCategoryCreateDeleteEvent event = new ProductCategoryCreateDeleteEvent(
-            actorId, productId, categoryIds);
-
-        productCategoryCreateDeleteTemplate.send(KafkaTopic.PRODUCT_CATEGORY_DELETE.getName(), event);
+    public void sendProductCategoryDeleted(Integer actorId, Integer productId, List<Integer> categoryIds) {
+        kafkaTemplate.send(KafkaTopic.PRODUCT_CATEGORY_DELETE.getName(),
+            new ProductCategoryCreateDeleteEvent(actorId, productId, categoryIds));
     }
-    
 }
