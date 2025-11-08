@@ -3,6 +3,6 @@ from typing import Optional
 
 @dataclass
 class Category:
-    id: int
-    name: str
-    description: Optional[str]
+    id: Optional[int] = None
+    name: str = ""
+    description: Optional[str] = ""

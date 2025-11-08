@@ -48,4 +48,4 @@ public enum KafkaTopic {
     KafkaTopic(String name) {
         this.name = name;
     }
-}
+} 

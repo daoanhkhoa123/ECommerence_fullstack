@@ -6,9 +6,9 @@ from src.allocation.domain.entities.account import Account
 
 @dataclass
 class Vendor:
-    id: Optional[int]
-    account: Account
+    id: Optional[int] = None
+    account: Account = Account()
 
-    shop_name: str
+    shop_name: str = ""
     description: Optional[str] = None
     phone: Optional[str] = None

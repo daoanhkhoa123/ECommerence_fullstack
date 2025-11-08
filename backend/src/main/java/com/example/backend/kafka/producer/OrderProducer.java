@@ -37,6 +37,7 @@ public class OrderProducer {
             KafkaTopic.ORDER_ITEM_CREATE.getName(),
             new OrderItemCreateEvent(
                 actorId,
+                orderItem.getOrder().getId(),
                 orderItem.getId(),
                 vendorProduct.getId(),
                 orderItem.getQuantity(),

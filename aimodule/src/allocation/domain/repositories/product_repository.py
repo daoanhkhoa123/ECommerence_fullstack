@@ -1,0 +1,13 @@
+from abc import ABC, abstractmethod
+from typing import Optional, List
+from src.allocation.domain.entities.product import Product
+
+class AbstractProductRepository(ABC):
+    @abstractmethod
+    def add(self, product: Product) -> Product: ...
+    @abstractmethod
+    def get(self, product_id: int) -> Optional[Product]: ...
+    @abstractmethod
+    def list(self) -> List[Product]: ...
+    @abstractmethod
+    def update_stock(self, product_id: int, new_stock: int) -> None: ...

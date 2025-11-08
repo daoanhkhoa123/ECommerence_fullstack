@@ -5,3 +5,4 @@ public record VendorReadDeleteEvent(
 
     Integer vendorId
 ) {}
+

@@ -9,12 +9,12 @@ from src.allocation.domain.entities.vendor import Vendor
 @dataclass
 class Product:
     # Flattened identifiers
-    vendor_product_id: int
-    product_id: int
-    vendor: Vendor
+    vendor_product_id: Optional[int] = None
+    product_id: Optional[int] = None
+    vendor: Vendor = Vendor()
 
     # Product details
-    name: str
+    name: str = ""
     description: Optional[str] = None
     brand: Optional[str] = None
     image_url: Optional[str] = None

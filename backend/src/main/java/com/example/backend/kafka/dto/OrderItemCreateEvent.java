@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public record OrderItemCreateEvent(
     Integer actorId,
 
+    Integer orderId,
     Integer orderItemId,
     Integer vendorProductId,
 

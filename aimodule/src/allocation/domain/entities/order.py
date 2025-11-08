@@ -9,10 +9,10 @@ from src.allocation.domain.entities.product import Product
 
 @dataclass
 class Order:
-    id: Optional[int]
-    customer: Customer
-    order_status: str
-    total_amount: Decimal = Decimal("0.00")
+    id: Optional[int] = None
+    customer: Customer = Customer()
+    order_status: str = ""
+    total_amount: Decimal= Decimal("0.00")
     shipping_address: str = ""
     order_time: datetime.datetime = field(default_factory=datetime.datetime.now)
 

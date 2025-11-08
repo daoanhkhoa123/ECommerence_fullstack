@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class Account:
-    id: int
-    role: str
+    id: Optional[int] = None
+    role: str = ""
 
 
