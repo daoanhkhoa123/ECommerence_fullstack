@@ -11,6 +11,6 @@ class LLMInterface(ABC):
         pass
 
     @abstractmethod
-    def __call__(self, messages: List[ChatMessage]) -> str:
+    def __call__(self, message: str) -> str:
         """Accept a list of ChatMessage entities and return a generated string"""
         pass

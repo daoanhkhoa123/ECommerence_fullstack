@@ -7,7 +7,12 @@ settings = KafkaSettings()  # type: ignore
 
 class KafkaProducer:
     def __init__(self):
-        self.producer = Producer({"bootstrap.servers": settings.kafka_url})
+        self.producer = Producer({
+            "bootstrap.servers": settings.kafka_url,
+            "retries": settings.kafka_retries,
+            "retry.backoff.ms": settings.kafka_retry_backoff_ms,
+            "acks": settings.kafka_acks
+        })
 
     def _delivery_report(self, err, msg):
         if err:

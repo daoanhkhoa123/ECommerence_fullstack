@@ -43,3 +43,6 @@ class SqlAlchemyCustomerRepository(AbstractCustomerRepository):
         model = self.session.get(CustomerModel, customer.id)
         if model:
             self.session.delete(model)
+
+    def get_by_account_id(self, account_id: int) -> Optional[Customer]:
+        return self.session.query(CustomerModel).filter_by(account_id=account_id).first()

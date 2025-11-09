@@ -9,14 +9,14 @@ from src.allocation.services.chat_service import build_graph, handle_user_messag
 chat_graph = build_graph()
 
 
-@register_topic("chat.message.v1")
+@register_topic("chat.message.user.v1")
 async def handle_chat_message(event: dict, app: FastAPI | None = None):
     """
     Handle chat message events coming from Kafka.
     Process the user message and produce a system reply back to Kafka.
     """
     try:
-        # Validate and parse event payload
+        # Validate and parse event payload using DTO (with aliases)
         data = ChatMessageEvent(**event)
 
         # Create a fresh Unit of Work for this message
@@ -29,19 +29,22 @@ async def handle_chat_message(event: dict, app: FastAPI | None = None):
             )
             uow.commit()
 
-        # Produce reply back to Kafka
+        # Produce reply back to Kafka as SYSTEM role
         kafka_producer.send(
-            topic="chat.message.v1",
+            topic="chat.message.system.v1",
             value={
-                "account_id": data.account_id,
+                "accountId": data.account_id,  # use alias
                 "message": response_text,
                 "role": "SYSTEM",
             },
         )
+        print("SENT: ", str({"accountId": data.account_id,  # use alias
+                "message": response_text,
+                "role": "SYSTEM",}))
 
     except Exception as e:
         # Basic error handling (replace with proper logging if available)
         if app and hasattr(app, "logger"):
-            app.logger.exception("Error handling chat message") # type: ignore
+            app.logger.exception("Error handling chat message")  # type: ignore
         else:
             print(f"[handle_chat_message] Error: {e}")

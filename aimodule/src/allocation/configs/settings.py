@@ -24,6 +24,9 @@ class KafkaSettings(BaseSettings):
 
     consumer_handlers: str = DEFAULT_CONSUMER_HANDLERS
     producer_handlers: str = DEFAULT_PRODUCER_HANDLERS
+    kafka_retries: int = 3
+    kafka_retry_backoff_ms: int = 1000
+    kafka_acks: str = "all"
 
 
     model_config = SettingsConfigDict(

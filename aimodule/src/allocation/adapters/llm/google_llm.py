@@ -19,7 +19,6 @@ class GoogleLLM(LLMInterface):
         )
         return response.text # type: ignore
 
-    def __call__(self, messages: List[ChatMessage]) -> str:
+    def __call__(self, message: str) -> str:
         # Convert ChatMessage entities to strings for the LLM
-        prompt = "\n".join(f"{m.role}: {m.content}" for m in messages)
-        return self.generate_text(prompt)
+        return self.generate_text(message)

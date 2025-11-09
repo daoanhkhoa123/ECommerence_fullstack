@@ -16,7 +16,8 @@ public class ChatProducer {
 
     public String produce(ChatMessageEvent event) {
         String correlationId = UUID.randomUUID().toString();
-        kafkaTemplate.send(KafkaTopic.CHAT_MESSAGE.getName(), correlationId, event);
+        System.err.println(event);
+        kafkaTemplate.send(KafkaTopic.CHAT_MESSAGE_USER.getName(), correlationId, event);
         return correlationId;
     }
 }

@@ -18,7 +18,7 @@ public class ChatReplyConsumer {
 
     private final ChatReplyCache replyCache;
 
-    @KafkaListener(topics = "chat.message.v1")
+    @KafkaListener(topics = "chat.message.system.v1")
     public void consumeReply(ChatMessageEvent event) {
         ChatMessageDTO dto = new ChatMessageDTO(event.message());
 

@@ -39,3 +39,6 @@ class SqlAlchemyVendorRepository(AbstractVendorRepository):
         model = self.session.get(VendorModel, vendor.id)
         if model:
             self.session.delete(model)
+
+    def get_by_account_id(self, account_id: int) -> Optional[Vendor]:
+        return self.session.query(VendorModel).filter_by(account_id=account_id).first()
