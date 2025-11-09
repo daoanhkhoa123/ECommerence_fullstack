@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, Table
-from src.allocation.adapters.persistence.base import Base
+from src.allocation.adapters.persistence.database import Base
 
 products_categories = Table(
     "product_categories",

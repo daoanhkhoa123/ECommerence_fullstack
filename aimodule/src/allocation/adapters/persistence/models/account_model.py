@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from src.allocation.adapters.persistence.base import Base
+from src.allocation.adapters.persistence.database import Base
 
 
 class AccountModel(Base):

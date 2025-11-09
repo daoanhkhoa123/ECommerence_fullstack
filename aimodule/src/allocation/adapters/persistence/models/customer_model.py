@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Date, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from src.allocation.adapters.persistence.base import Base
-
+from src.allocation.adapters.persistence.database import Base
 
 class CustomerModel(Base):
     __tablename__ = "customers"
@@ -15,4 +14,4 @@ class CustomerModel(Base):
     birth_date = Column(Date, nullable=True)
 
     account = relationship("AccountModel", back_populates="customer")
-    orders = relationship("OrderModel", back_populates="customers")
+    orders = relationship("OrderModel", back_populates="customer")

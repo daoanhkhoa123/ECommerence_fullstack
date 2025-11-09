@@ -1,5 +1,5 @@
 include:
-  # - ./aimodule_db/compose.aimodule_db.yml
+  - ./aimodule_db/compose.aimodule_db.yml
   # - ./aimodule/compose.ai
 
   - ./backend_db/compose.backend_db.yml

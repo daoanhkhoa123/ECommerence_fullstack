@@ -9,6 +9,7 @@ from src.allocation.adapters.message_bus.broker.kafka_producer import \
 from src.allocation.entrypoints.message_broker.dispatcher import \
     list_registered_topics
 from src.allocation.entrypoints.message_broker.loader import load_all_handlers
+from src.allocation.entrypoints.api.routers import api_router
 
 load_all_handlers()
 print(f"[Kafka] Topics registered: {list_registered_topics()}")
@@ -24,6 +25,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="E-Commerce API", lifespan=lifespan)
+app.include_router(api_router)
 
 @app.get("/")
 def root():

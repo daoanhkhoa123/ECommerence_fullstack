@@ -70,7 +70,7 @@ public class AccountApplication {
         log.info("Created customer id={}, email={}", customer.getId(), customer.getAccount().getEmail());
 
         // For events, you can use null or 0 to indicate “anonymous actor”
-        accountProducer.sendCustomerCreated(null, customer);
+        accountProducer.sendCustomerCreated(customer.getAccount().getId(), customer);
         log.info("Sent event for customer id={}", customer.getId());
 
         return buildFromCustomer(customer);
@@ -131,7 +131,7 @@ public class AccountApplication {
         Vendor vendor = accountService.registerVendor(request);
         log.info("Created vendor id={}, email={}", vendor.getId(), vendor.getAccount().getEmail());
 
-        accountProducer.sendVendorCreated(null, vendor);
+        accountProducer.sendVendorCreated(vendor.getAccount().getId(), vendor);
         log.info("Sent event for vendor id={}", vendor.getId());
 
         return buildFromVendor(vendor);

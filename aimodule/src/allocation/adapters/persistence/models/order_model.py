@@ -1,7 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import relationship
-from src.allocation.adapters.persistence.base import Base
-
+from src.allocation.adapters.persistence.database import Base
 
 class OrderModel(Base):
     __tablename__ = "orders"
@@ -14,5 +13,5 @@ class OrderModel(Base):
     shipping_address = Column(String(255), nullable=True)
     order_time = Column(DateTime, nullable=False)
 
-    customer = relationship("CustomerModel", back_populates="order")
+    customer = relationship("CustomerModel", back_populates="orders")
     orders_items = relationship("OrderItemModel", back_populates="order")

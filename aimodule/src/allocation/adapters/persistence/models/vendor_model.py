@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
-from src.allocation.adapters.persistence.base import Base
+from src.allocation.adapters.persistence.database import Base
 
 
 class VendorModel(Base):

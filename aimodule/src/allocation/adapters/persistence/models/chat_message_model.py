@@ -3,8 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import declarative_base, relationship
-
-Base = declarative_base()
+from src.allocation.adapters.persistence.database import Base
 
 class ChatMessageModel(Base):
     __tablename__ = "chat_messages"

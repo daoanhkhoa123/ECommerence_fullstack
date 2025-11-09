@@ -1,34 +1,47 @@
 from fastapi import FastAPI
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
-    SqlAlchemyUnitOfWork
-from src.allocation.entrypoints.message_broker.build_graph import \
-    build_chat_graph
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.dispatcher import register_topic
 from src.allocation.entrypoints.message_broker.producer import kafka_producer
-from src.allocation.entrypoints.message_broker.producer.schemas.chat_message_event import \
-    ChatMessageEvent
-from src.allocation.services.chat_service import handle_user_message
+from src.allocation.entrypoints.message_broker.producer.schemas.chat_message_event import ChatMessageEvent
+from src.allocation.services.chat_service import build_graph, handle_user_message
 
-chat_graph = build_chat_graph()
+# Build chat graph once for reuse (expensive initialization)
+chat_graph = build_graph()
+
 
 @register_topic("chat.message.v1")
 async def handle_chat_message(event: dict, app: FastAPI | None = None):
-    data = ChatMessageEvent(**event)
+    """
+    Handle chat message events coming from Kafka.
+    Process the user message and produce a system reply back to Kafka.
+    """
+    try:
+        # Validate and parse event payload
+        data = ChatMessageEvent(**event)
 
-    uow = SqlAlchemyUnitOfWork()
+        # Create a fresh Unit of Work for this message
+        with SqlAlchemyUnitOfWork() as uow:
+            response_text = handle_user_message(
+                user_id=data.account_id,
+                message=data.message,
+                graph=chat_graph,
+                uow=uow,
+            )
+            uow.commit()
 
-    response_text = handle_user_message(
-        user_id=data.account_id,
-        message=data.message,
-        graph=chat_graph,
-        uow=uow,
-    )
+        # Produce reply back to Kafka
+        kafka_producer.send(
+            topic="chat.message.v1",
+            value={
+                "account_id": data.account_id,
+                "message": response_text,
+                "role": "SYSTEM",
+            },
+        )
 
-    kafka_producer.send(
-        topic="chat.message.v1",
-        value={
-            "account_id": data.account_id,
-            "message": response_text,
-            "role": "SYSTEM",
-        },
-    )
+    except Exception as e:
+        # Basic error handling (replace with proper logging if available)
+        if app and hasattr(app, "logger"):
+            app.logger.exception("Error handling chat message") # type: ignore
+        else:
+            print(f"[handle_chat_message] Error: {e}")
