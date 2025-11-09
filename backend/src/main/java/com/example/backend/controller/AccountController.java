@@ -25,7 +25,7 @@ public class AccountController {
         return ResponseEntity.ok(respond);
     }
 
-    @PostMapping("/cusomter/register")
+    @PostMapping("/customer/register")
     public ResponseEntity<CustomerRespond> registerCustomer(
         @Valid @RequestBody CustomerRequest request) {
             CustomerRespond respond = accountApplication.registerCustomer(request);
@@ -43,7 +43,7 @@ public class AccountController {
     }
 
     
-    @DeleteMapping("/customers/{customerId}")
+    @DeleteMapping("/customer/{customerId}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Integer customerId) {
         accountApplication.deleteCustomer(customerId);
         return ResponseEntity.noContent().build();
@@ -75,7 +75,7 @@ public class AccountController {
     }
 
 
-    @DeleteMapping("/vendors/{vendorId}")
+    @DeleteMapping("/vendor/{vendorId}")
     public ResponseEntity<Void> deleteVendor(@PathVariable Integer vendorId) {
         accountApplication.deleteVendor(vendorId);
         return ResponseEntity.noContent().build();

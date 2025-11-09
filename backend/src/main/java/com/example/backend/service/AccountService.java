@@ -36,10 +36,6 @@ public class AccountService {
 
     private Customer setByRequest(Customer customer, CustomerRequest request)
     {
-        Account account = setByRequest(customer.getAccount(), request.accountRequest());
-        account.setRole(AccountRole.CUSTOMER);
-        
-        customer.setAccount(account);
         customer.setFullName(request.fullName());
         customer.setPhone(request.phone());
         customer.setAddress(request.address());
@@ -49,10 +45,6 @@ public class AccountService {
 
     private Vendor setByRequest(Vendor vendor, VendorRequest request)
     {
-        Account account = setByRequest(vendor.getAccount(), request.accountRequest());
-        account.setRole(AccountRole.VENDOR);
-
-        vendor.setAccount(account);
         vendor.setShopName(request.shopName());
         vendor.setDescription(request.description());
         vendor.setPhone(request.phone());
@@ -73,13 +65,23 @@ public class AccountService {
 
     public Vendor registerVendor(VendorRequest request)
     {
+        Account account = setByRequest(new Account(), request.accountRequest());
+        account.setRole(AccountRole.VENDOR);
+        accountRepository.save(account);
+
         Vendor vendor = setByRequest(new Vendor(), request);
+        vendor.setAccount(account);
         return vendorRepository.save(vendor);
     }
 
     public Customer registerCustomer(CustomerRequest request)
-    {
+    {   
+        Account account = setByRequest(new Account(), request.accountRequest());
+        account.setRole(AccountRole.CUSTOMER);
+        accountRepository.save(account);
+
         Customer customer = setByRequest(new Customer(), request);
+        customer.setAccount(account);
         return customerRepository.save(customer);
     }
 
@@ -87,7 +89,13 @@ public class AccountService {
     {
         Customer customer = customerRepository.findById(customerId)
          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+
+        Account account = setByRequest(new Account(), request.accountRequest());
+        account.setRole(AccountRole.CUSTOMER);
+        accountRepository.save(account);
+
         customer = setByRequest(customer, request);
+        customer.setAccount(account);
         
         return customerRepository.save(customer);        
     }
@@ -96,7 +104,13 @@ public class AccountService {
     {
         Vendor vendor = vendorRepository.findById(vendorId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendor not found"));
+
+            Account account = setByRequest(new Account(), request.accountRequest());
+        account.setRole(AccountRole.CUSTOMER);
+        accountRepository.save(account);
+
         vendor = setByRequest(vendor, request);
+        vendor.setAccount(account);
         
         return vendorRepository.save(vendor);
     }

@@ -64,17 +64,18 @@ public class AccountApplication {
     }
 
     public CustomerRespond registerCustomer(CustomerRequest request) {
-        Integer actorId = jwtService.getCurrentUserId();
-        log.info("Registering new customer by actor={}", actorId);
+        log.info("Registering new customer {}", request.fullName());
 
         Customer customer = accountService.registerCustomer(request);
-        log.info("Called accountService.registerCustomer() - Created id={}, email={}", customer.getId(), customer.getAccount().getEmail());
+        log.info("Created customer id={}, email={}", customer.getId(), customer.getAccount().getEmail());
 
-        accountProducer.sendCustomerCreated(actorId, customer);
-        log.info("Called accountProducer.sendCustomerCreated() - Sent event for id={} by actor={}", customer.getId(), actorId);
+        // For events, you can use null or 0 to indicate “anonymous actor”
+        accountProducer.sendCustomerCreated(null, customer);
+        log.info("Sent event for customer id={}", customer.getId());
 
         return buildFromCustomer(customer);
     }
+
 
     public CustomerRespond updateCustomer(Integer customerId, CustomerRequest request) {
         Integer actorId = jwtService.getCurrentUserId();
@@ -125,14 +126,13 @@ public class AccountApplication {
     }
 
     public VendorRespond registerVendor(VendorRequest request) {
-        Integer actorId = jwtService.getCurrentUserId();
-        log.info("Registering new vendor by actor={}", actorId);
+        log.info("Registering new vendor {}", request.shopName());
 
         Vendor vendor = accountService.registerVendor(request);
-        log.info("Called accountService.registerVendor() - Created id={}, email={}", vendor.getId(), vendor.getAccount().getEmail());
+        log.info("Created vendor id={}, email={}", vendor.getId(), vendor.getAccount().getEmail());
 
-        accountProducer.sendVendorCreated(actorId, vendor);
-        log.info("Called accountProducer.sendVendorCreated() - Sent event for id={} by actor={}", vendor.getId(), actorId);
+        accountProducer.sendVendorCreated(null, vendor);
+        log.info("Sent event for vendor id={}", vendor.getId());
 
         return buildFromVendor(vendor);
     }
