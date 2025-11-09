@@ -1,8 +1,8 @@
 # adapters/persistence/models.py
-from sqlalchemy import Column, String, DateTime, Integer, ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import declarative_base
 from datetime import datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 

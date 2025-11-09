@@ -1,9 +1,12 @@
-from typing import Optional, List
-from sqlalchemy.orm import Session
-from src.allocation.domain.entities.category import Category
-from src.allocation.adapters.persistence.models.category_model import CategoryModel
+from typing import List, Optional
 
-class CategoryRepository:
+from sqlalchemy.orm import Session
+from src.allocation.adapters.persistence.models.category_model import \
+    CategoryModel
+from src.allocation.domain.entities.category import Category
+
+
+class SqlAlchemyCategoryRepository:
     def __init__(self, session: Session):
         self.session = session
 
@@ -18,7 +21,7 @@ class CategoryRepository:
         model = CategoryModel(name=category.name, description=category.description)
         self.session.add(model)
         self.session.flush()  # ensures ID is available
-        category.id = model.id
+        category.id = model.id # type: ignore
 
     def delete(self, category: Category):
         model = self.session.get(CategoryModel, category.id)
@@ -30,4 +33,4 @@ class CategoryRepository:
 
     # --- Helper mapping ---
     def _model_to_entity(self, model: CategoryModel) -> Category:
-        return Category(id=model.id, name=model.name, description=model.description)
+        return Category(id=model.id, name=model.name, description=model.description) # type: ignore

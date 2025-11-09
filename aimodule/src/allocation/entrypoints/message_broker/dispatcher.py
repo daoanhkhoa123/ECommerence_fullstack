@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Awaitable
+from typing import Awaitable, Callable, Dict
 
 _topic_handlers: Dict[str, Callable[[dict], Awaitable[None]]] = {}
 

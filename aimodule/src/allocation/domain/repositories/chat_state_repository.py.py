@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from src.allocation.domain.entities.chat_state import ChatState
+
 
 class ConversationStateRepository(ABC):
     @abstractmethod

@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from src.allocation.domain.entities.chat_message import ChatMessage, CHAT_ROLE
+from src.allocation.domain.entities.chat_message import CHAT_ROLE, ChatMessage
+
 
 @dataclass
 class ChatState:

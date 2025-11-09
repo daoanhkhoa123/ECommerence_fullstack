@@ -41,7 +41,9 @@ public enum KafkaTopic {
     VENDOR_PRODUCT_READ("vendor-product.read.v1"),
     VENDOR_PRODUCT_CREATE("vendor-product.create.v1"),
     VENDOR_PRODUCT_UPDATE("vendor-product.update.v1"),
-    VENDOR_PRODUCT_DELETE("vendor-product.delete.v1");
+    VENDOR_PRODUCT_DELETE("vendor-product.delete.v1"),
+
+    CHAT_MESSAGE("chat.message.v1");
 
     private final String name;
 

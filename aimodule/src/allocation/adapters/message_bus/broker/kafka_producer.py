@@ -1,13 +1,16 @@
 import json
+
 from confluent_kafka import Producer
-from typing import Any
+from src.allocation.configs.settings import KafkaSettings
+
+settings = KafkaSettings()  # type: ignore
 
 class KafkaProducer:
-    def __init__(self, bootstrap_servers: str):
-        self.producer = Producer({"bootstrap.servers": bootstrap_servers})
+    def __init__(self):
+        self.producer = Producer({"bootstrap.servers": settings.kafka_url})
 
     def _delivery_report(self, err, msg):
-        if err is not None:
+        if err:
             print(f"[Kafka] Message delivery failed: {err}")
         else:
             print(f"[Kafka] Message delivered to {msg.topic()} [{msg.partition()}]")
@@ -20,19 +23,15 @@ class KafkaProducer:
         self.producer.produce(
             topic=topic,
             value=json.dumps(value).encode("utf-8"),
-            callback=self._delivery_report,
+            callback=self._delivery_report
         )
         self.producer.flush()
 
-def create_kafka_producer(bootstrap_servers: str = "localhost:9092") -> Producer:
-    return Producer({"bootstrap.servers": bootstrap_servers})
 
-def produce_message(producer: Producer, topic: str, value: dict):
-    def delivery_report(err, msg):
-        if err is not None:
-            print(f"[Kafka] Message delivery failed: {err}")
-        else:
-            print(f"[Kafka] Message delivered to {msg.topic()} [{msg.partition()}]")
+# Optional convenience function if you prefer using functions instead of class
+def create_kafka_producer() -> KafkaProducer:
+    return KafkaProducer()
 
-    producer.produce(topic, value=json.dumps(value).encode("utf-8"), callback=delivery_report)
-    producer.flush()
+
+def produce_message(producer: KafkaProducer, topic: str, value: dict):
+    producer.send(topic, value)

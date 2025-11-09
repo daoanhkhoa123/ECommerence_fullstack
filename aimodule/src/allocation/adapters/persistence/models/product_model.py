@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Integer, String, Text, Numeric, Boolean, ForeignKey
+from sqlalchemy import (Boolean, Column, ForeignKey, Integer, Numeric, String,
+                        Text)
 from sqlalchemy.orm import relationship
 from src.allocation.adapters.persistence.base import Base
-from src.allocation.adapters.persistence.models.products_categories_model import products_categories 
+from src.allocation.adapters.persistence.models.products_categories_model import \
+    products_categories
+
 
 class ProductModel(Base):
     __tablename__ = "products"

@@ -1,6 +1,8 @@
-from pydantic import BaseModel
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
+
+from pydantic import BaseModel
+
 
 class PaymentCreateEvent(BaseModel):
     payment_id: int

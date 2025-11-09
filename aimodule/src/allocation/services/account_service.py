@@ -1,5 +1,4 @@
 from fastapi import HTTPException, status
-
 from src.allocation.domain.entities.account import Account
 from src.allocation.domain.entities.customer import Customer
 from src.allocation.domain.entities.vendor import Vendor
@@ -65,7 +64,7 @@ def update_customer(customer_id: int, request, uow: AbstractUnitOfWork) -> Custo
             )
 
         # Account only has role
-        .account.role = "CUSTOMER"
+        customer.account.role = "CUSTOMER"
         _set_customer_fields(customer, request)
         uow.commit()
         return customer

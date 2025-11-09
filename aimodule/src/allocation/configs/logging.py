@@ -1,5 +1,6 @@
-import sys
 import logging
+import sys
+
 
 def setup_loggin(debug:bool=False) -> None:
     """Configure global logging behavior."""

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class VendorCreateUpdateEvent(BaseModel):
     actor_id: int
     vendor_id: int

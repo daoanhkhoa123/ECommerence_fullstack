@@ -1,5 +1,5 @@
 # src/domain/entities/product.py
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Optional
 
@@ -11,8 +11,7 @@ class Product:
     # Flattened identifiers
     vendor_product_id: Optional[int] = None
     product_id: Optional[int] = None
-    vendor: Vendor = Vendor()
-
+    vendor: Vendor = field(default_factory=Vendor)
     # Product details
     name: str = ""
     description: Optional[str] = None
@@ -24,5 +23,3 @@ class Product:
     stock: Optional[int] = None
     sku: Optional[str] = None
     is_featured: bool = False
-
-    

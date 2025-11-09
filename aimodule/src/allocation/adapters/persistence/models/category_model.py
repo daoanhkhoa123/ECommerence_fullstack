@@ -1,7 +1,9 @@
 from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.orm import relationship
 from src.allocation.adapters.persistence.base import Base
-from src.allocation.adapters.persistence.models.products_categories_model import products_categories 
+from src.allocation.adapters.persistence.models.products_categories_model import \
+    products_categories
+
 
 class CategoryModel(Base):
     __tablename__ = "categories"

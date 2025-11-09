@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
 from src.allocation.domain.entities.account import Account
+
 
 class AbstractAccountRepository(ABC):
 

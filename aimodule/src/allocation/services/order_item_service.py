@@ -1,7 +1,7 @@
-from typing import List
-from fastapi import HTTPException, status
 from decimal import Decimal
+from typing import List
 
+from fastapi import HTTPException, status
 from src.allocation.domain.entities.order_item import OrderItem
 from src.allocation.services.unit_of_work import AbstractUnitOfWork
 

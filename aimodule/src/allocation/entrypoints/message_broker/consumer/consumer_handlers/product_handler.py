@@ -1,11 +1,10 @@
-from src.allocation.services import product_service
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
-from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.consumer.schemas.vendor_product_event import (
-    VendorProductReadEvent,
-    VendorProductCreateUpdateEvent,
-    VendorProductDeleteEvent,
-)
+    VendorProductCreateUpdateEvent, VendorProductDeleteEvent,
+    VendorProductReadEvent)
+from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.services import product_service
 
 uow = SqlAlchemyUnitOfWork()
 

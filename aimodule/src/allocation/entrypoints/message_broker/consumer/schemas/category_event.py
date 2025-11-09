@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
+
 
 class CategoryCreateUpdateEvent(BaseModel):
     actor_id: int

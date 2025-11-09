@@ -1,7 +1,9 @@
-from src.allocation.services import product_category_service
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
+from src.allocation.entrypoints.message_broker.consumer.schemas.product_category_event import \
+    ProductCategoryCreateDeleteEvent
 from src.allocation.entrypoints.message_broker.dispatcher import register_topic
-from src.allocation.entrypoints.message_broker.consumer.schemas.product_category_event import ProductCategoryCreateDeleteEvent
+from src.allocation.services import product_category_service
 
 uow = SqlAlchemyUnitOfWork()
 

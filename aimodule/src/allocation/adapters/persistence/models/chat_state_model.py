@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, JSON
+from sqlalchemy import JSON, Column, Integer, String
 from src.allocation.adapters.persistence.base import Base
+
 
 class ConversationStateModel(Base):
     __tablename__ = "conversation_states"

@@ -1,8 +1,9 @@
-from src.allocation.domain.entities.chat_message import CHAT_ROLE
+from datetime import datetime
+from typing import Literal, Optional
 
 from pydantic import BaseModel
-from typing import Literal, Optional
-from datetime import datetime
+from src.allocation.domain.entities.chat_message import CHAT_ROLE
+
 
 class ChatMessageEvent(BaseModel):
     account_id: int

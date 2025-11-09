@@ -1,11 +1,12 @@
-from typing import Optional, List
-from sqlalchemy.orm import Session
+from typing import List, Optional
 
-from src.allocation.adapters.persistence.models.product_model import ProductModel
+from sqlalchemy.orm import Session
+from src.allocation.adapters.persistence.models.product_model import \
+    ProductModel
 from src.allocation.domain.entities.product import Product
 
 
-class ProductRepository:
+class SqlAlchemyProductRepository:
     def __init__(self, session: Session):
         self.session = session
 
@@ -24,7 +25,7 @@ class ProductRepository:
         )
         self.session.add(model)
         self.session.flush()  # assigns id
-        product.product_id = model.product_id
+        product.product_id = model.product_id # type: ignore
         return product
 
     def get(self, product_id: int) -> Optional[Product]:
@@ -44,14 +45,14 @@ class ProductRepository:
         if not model:
             return None
 
-        model.name = product.name
-        model.description = product.description
-        model.brand = product.brand
-        model.image_url = product.image_url
-        model.price = product.price
-        model.stock = product.stock
-        model.sku = product.sku
-        model.is_featured = product.is_featured
+        model.name = product.name # type: ignore
+        model.description = product.description # type: ignore
+        model.brand = product.brand # type: ignore
+        model.image_url = product.image_url # type: ignore
+        model.price = product.price # type: ignore
+        model.stock = product.stock # type: ignore
+        model.sku = product.sku # type: ignore
+        model.is_featured = product.is_featured # type: ignore
 
         self.session.add(model)
         return product
@@ -64,14 +65,14 @@ class ProductRepository:
         if not model:
             return None
         return Product(
-            vendor_product_id=model.vendor_product_id,
-            product_id=model.product_id,
-            name=model.name,
-            description=model.description,
-            brand=model.brand,
-            image_url=model.image_url,
-            price=model.price,
-            stock=model.stock,
-            sku=model.sku,
-            is_featured=model.is_featured,
+            vendor_product_id=model.vendor_product_id, # type: ignore
+            product_id=model.product_id, # type: ignore
+            name=model.name, # type: ignore
+            description=model.description, # type: ignore
+            brand=model.brand, # type: ignore
+            image_url=model.image_url, # type: ignore
+            price=model.price, # type: ignore
+            stock=model.stock, # type: ignore
+            sku=model.sku, # type: ignore
+            is_featured=model.is_featured, # type: ignore
         )

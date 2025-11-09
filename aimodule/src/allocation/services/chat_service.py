@@ -1,7 +1,10 @@
-from langgraph.graph import StateGraph  
-from src.allocation.domain.entities.chat_state import ChatState
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
 from typing import Any
+
+from langgraph.graph import StateGraph
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
+from src.allocation.domain.entities.chat_state import ChatState
+
 
 def handle_user_message(
     user_id: int,

@@ -1,4 +1,5 @@
-from langgraph.graph import StateGraph, END
+from langgraph.graph import END, StateGraph
+
 
 def build_chat_graph() -> StateGraph:
     graph = StateGraph(dict)  # state type is usually a dict

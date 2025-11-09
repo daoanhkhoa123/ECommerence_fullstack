@@ -1,10 +1,9 @@
-from src.allocation.services import order_item_service
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
-from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.consumer.schemas.order_item_event import (
-    OrderItemCreateEvent,
-    OrderItemDeleteEvent,
-)
+    OrderItemCreateEvent, OrderItemDeleteEvent)
+from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.services import order_item_service
 
 uow = SqlAlchemyUnitOfWork()
 

@@ -1,27 +1,54 @@
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-_ENV_FILE = ".env"
+_ENV_FILE = Path(__file__).parent.parent / ".env"
 _ENV_FILE_ENCODING = "utf-8"
 
-class DatabaseSettings(BaseSettings):
-    backend_db_url: str | None = None
-    aimodule_db_url: str | None = None
-    minconn: int = 1
-    maxconn: int = 3
+DEFAULT_CONSUMER_HANDLERS = "src.allocation.entrypoints.message_broker.consumer.consumer_handlers"
+DEFAULT_PRODUCER_HANDLERS = "src.allocation.entrypoints.message_broker.producer.producer_handlers"
 
-    model_config = SettingsConfigDict(env_file=_ENV_FILE, env_file_encoding=_ENV_FILE_ENCODING, extra="ignore")
+
+class DatabaseSettings(BaseSettings):
+    database_url: str  
+
+    model_config = SettingsConfigDict(
+        env_file=_ENV_FILE,
+        env_file_encoding=_ENV_FILE_ENCODING,
+        extra="ignore"
+    )
+
+
+class KafkaSettings(BaseSettings):
+    kafka_url: str  
+    kafka_group: str
+
+    consumer_handlers: str = DEFAULT_CONSUMER_HANDLERS
+    producer_handlers: str = DEFAULT_PRODUCER_HANDLERS
+
+
+    model_config = SettingsConfigDict(
+        env_file=_ENV_FILE,
+        env_file_encoding=_ENV_FILE_ENCODING,
+        extra="ignore"
+    )
 
 
 class LLMSettings(BaseSettings):
-    google_api_key: str | None = None
-    google_llm:str| None = None
-    google_embedding:str |None = None
+    google_api_key: str  
+    google_llm: str      
+    google_embedding: str  
 
-    model_config = SettingsConfigDict(env_file=_ENV_FILE, env_file_encoding=_ENV_FILE_ENCODING, extra="ignore")
-
+    model_config = SettingsConfigDict(
+        env_file=_ENV_FILE,
+        env_file_encoding=_ENV_FILE_ENCODING,
+        extra="ignore"
+    )
 
 class AppSettings(BaseSettings):
-    environment: str = "development"
-    debug: bool = True
+    src_path: str = "allocation"
 
-    model_config = SettingsConfigDict(env_file=_ENV_FILE, env_file_encoding=_ENV_FILE_ENCODING, extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=_ENV_FILE,
+        env_file_encoding=_ENV_FILE_ENCODING,
+        extra="ignore"
+    )

@@ -1,9 +1,13 @@
 from typing import Optional
-from src.allocation.domain.entities.account import Account
-from src.allocation.domain.repositories.account_repository import AbstractAccountRepository
-from src.allocation.adapters.persistence.models.account_model import AccountModel
 
-class AccountRepository(AbstractAccountRepository):
+from src.allocation.adapters.persistence.models.account_model import \
+    AccountModel
+from src.allocation.domain.entities.account import Account
+from src.allocation.domain.repositories.account_repository import \
+    AbstractAccountRepository
+
+
+class SqlAlchemyAccountRepository(AbstractAccountRepository):
     def __init__(self, session):
         self.session = session
 

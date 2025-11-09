@@ -1,9 +1,11 @@
 # adapters/persistence/repositories/chat_repository.py
-from domain.entities.chat_message import ChatMessage
-from adapters.persistence.models.chat_message_model import ChatMessageModel
 from sqlalchemy.orm import Session
 
-class ChatRepository:
+from src.allocation.adapters.persistence.models.chat_message_model import ChatMessageModel
+from src.allocation.domain.entities.chat_message import ChatMessage
+
+
+class SqlAlchemyChatMessageRepository:
     def __init__(self, session: Session):
         self.session = session
 

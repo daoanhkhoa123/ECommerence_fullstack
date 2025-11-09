@@ -1,16 +1,20 @@
-import json
 import asyncio
+import json
+
 from confluent_kafka import Consumer, KafkaError
-from src.allocation.entrypoints.consumer.dispatcher import get_handler_for_topic
+from src.allocation.configs.settings import KafkaSettings
+from src.allocation.entrypoints.message_broker.dispatcher import \
+    get_handler_for_topic
 
+settings = KafkaSettings() # type: ignore
 
-def create_kafka_consumer(bootstrap_servers: str, group_id: str, topics: list[str]) -> Consumer:
+def create_kafka_consumer(topics: list[str]) -> Consumer:
     """
-    Create and configure a Kafka consumer.
+    Create and configure a Kafka consumer with fixed group ID from settings.
     """
     config = {
-        "bootstrap.servers": bootstrap_servers,
-        "group.id": group_id,
+        "bootstrap.servers": settings.kafka_url,
+        "group.id": settings.kafka_group, 
         "auto.offset.reset": "earliest",
         "enable.auto.commit": True,
     }

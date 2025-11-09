@@ -1,6 +1,6 @@
 from typing import List
-from fastapi import HTTPException, status
 
+from fastapi import HTTPException, status
 from src.allocation.domain.entities.product import Product
 from src.allocation.domain.entities.vendor import Vendor
 from src.allocation.services.unit_of_work import AbstractUnitOfWork

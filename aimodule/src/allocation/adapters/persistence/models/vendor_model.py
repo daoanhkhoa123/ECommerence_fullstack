@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from src.allocation.adapters.persistence.base import Base
+
 
 class VendorModel(Base):
     __tablename__ = "vendors"

@@ -1,9 +1,11 @@
-from typing import Optional, List
+from typing import List, Optional
+
 from sqlalchemy.orm import Session
-from src.allocation.adapters.persistence.models.order_item_model import OrderItemModel
+from src.allocation.adapters.persistence.models.order_item_model import \
+    OrderItemModel
 
 
-class OrderItemRepository:
+class SqlAlchemyOrderItemRepository:
     def __init__(self, session: Session):
         self.session = session
 

@@ -1,8 +1,10 @@
 from typing import List
-from google import genai as _genai
+
 from config.settings import LLMSettings
-from src.allocation.domain.repositories.llm_interface import LLMInterface
+from google import genai as _genai
 from src.allocation.domain.entities.chat_message import ChatMessage
+from src.allocation.domain.repositories.llm_interface import LLMInterface
+
 
 class GoogleLLM(LLMInterface):
 

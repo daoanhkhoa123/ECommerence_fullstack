@@ -1,12 +1,16 @@
 # src/allocation/adapters/persistence/product_category_repository.py
 from typing import List
-from sqlalchemy.orm import Session
-from sqlalchemy import insert, delete
-from src.allocation.domain.entities.category import Category
-from src.allocation.adapters.persistence.models.products_categories_model import products_categories
-from src.allocation.adapters.persistence.models.category_model import CategoryModel
 
-class ProductCategoryRepository:
+from sqlalchemy import delete, insert
+from sqlalchemy.orm import Session
+from src.allocation.adapters.persistence.models.category_model import \
+    CategoryModel
+from src.allocation.adapters.persistence.models.products_categories_model import \
+    products_categories
+from src.allocation.domain.entities.category import Category
+
+
+class SqlAlchemyProductCategoryRepository:
     def __init__(self, session: Session):
         self.session = session
 
@@ -17,7 +21,7 @@ class ProductCategoryRepository:
             .filter(products_categories.c.product_id == product_id)
             .all()
         )
-        return [Category(id=r.id, name=r.name, description=r.description) for r in results]
+        return [Category(id=r.id, name=r.name, description=r.description) for r in results] # type: ignore
 
     def delete_by_category_id(self, category_id: int):
         self.session.execute(

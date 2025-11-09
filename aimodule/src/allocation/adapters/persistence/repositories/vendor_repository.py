@@ -1,10 +1,13 @@
 from typing import Optional
-from src.allocation.domain.entities.vendor import Vendor
-from src.allocation.domain.entities.account import Account
-from src.allocation.domain.repositories.vendor_repository import AbstractVendorRepository
-from src.allocation.adapters.persistence.models.vendor_model import VendorModel
 
-class VendorRepository(AbstractVendorRepository):
+from src.allocation.adapters.persistence.models.vendor_model import VendorModel
+from src.allocation.domain.entities.account import Account
+from src.allocation.domain.entities.vendor import Vendor
+from src.allocation.domain.repositories.vendor_repository import \
+    AbstractVendorRepository
+
+
+class SqlAlchemyVendorRepository(AbstractVendorRepository):
     def __init__(self, session):
         self.session = session
 

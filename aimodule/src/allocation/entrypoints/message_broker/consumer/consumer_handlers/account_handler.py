@@ -1,16 +1,11 @@
-from src.allocation.services import account_service
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
-from src.allocation.entrypoints.message_broker.dispatcher import register_topic
-
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.consumer.schemas.customer_event import (
-    CustomerCreateUpdateEvent,
-    CustomerReadDeleteEvent,
-)
+    CustomerCreateUpdateEvent, CustomerReadDeleteEvent)
 from src.allocation.entrypoints.message_broker.consumer.schemas.vendor_event import (
-    VendorCreateUpdateEvent,
-    VendorReadDeleteEvent,
-)
-
+    VendorCreateUpdateEvent, VendorReadDeleteEvent)
+from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.services import account_service
 
 # --------------------------------------------------
 # CUSTOMER HANDLERS

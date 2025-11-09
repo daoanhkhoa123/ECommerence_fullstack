@@ -1,10 +1,14 @@
 from typing import Optional
-from src.allocation.domain.entities.customer import Customer
-from src.allocation.domain.entities.account import Account
-from src.allocation.domain.repositories.customer_repository import AbstractCustomerRepository
-from src.allocation.adapters.persistence.models.customer_model import CustomerModel
 
-class CustomerRepository(AbstractCustomerRepository):
+from src.allocation.adapters.persistence.models.customer_model import \
+    CustomerModel
+from src.allocation.domain.entities.account import Account
+from src.allocation.domain.entities.customer import Customer
+from src.allocation.domain.repositories.customer_repository import \
+    AbstractCustomerRepository
+
+
+class SqlAlchemyCustomerRepository(AbstractCustomerRepository):
     def __init__(self, session):
         self.session = session
 

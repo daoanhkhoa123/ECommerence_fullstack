@@ -1,15 +1,17 @@
 from fastapi import FastAPI
-
-from src.allocation.services.chat_service import handle_user_message
-from src.allocation.entrypoints.message_broker.producer import kafka_producer
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
+from src.allocation.entrypoints.message_broker.build_graph import \
+    build_chat_graph
 from src.allocation.entrypoints.message_broker.dispatcher import register_topic
-from src.allocation.entrypoints.message_broker.producer.schemas.chat_message_event import ChatMessageEvent
-from src.allocation.entrypoints.message_broker.build_graph import build_chat_graph
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
+from src.allocation.entrypoints.message_broker.producer import kafka_producer
+from src.allocation.entrypoints.message_broker.producer.schemas.chat_message_event import \
+    ChatMessageEvent
+from src.allocation.services.chat_service import handle_user_message
 
 chat_graph = build_chat_graph()
 
-@register_topic("chat-user-message")
+@register_topic("chat.message.v1")
 async def handle_chat_message(event: dict, app: FastAPI | None = None):
     data = ChatMessageEvent(**event)
 
@@ -23,7 +25,7 @@ async def handle_chat_message(event: dict, app: FastAPI | None = None):
     )
 
     kafka_producer.send(
-        topic="chat-system-messages",
+        topic="chat.message.v1",
         value={
             "account_id": data.account_id,
             "message": response_text,

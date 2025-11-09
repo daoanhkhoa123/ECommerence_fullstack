@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Date, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from src.allocation.adapters.persistence.base import Base
+
 
 class CustomerModel(Base):
     __tablename__ = "customers"

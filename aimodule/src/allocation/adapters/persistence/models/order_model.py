@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, ForeignKey
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import relationship
 from src.allocation.adapters.persistence.base import Base
+
 
 class OrderModel(Base):
     __tablename__ = "orders"

@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import List, Optional
+
 from src.allocation.domain.entities.category import Category
+
 
 class AbstractCategoryRepository(ABC):
     @abstractmethod
