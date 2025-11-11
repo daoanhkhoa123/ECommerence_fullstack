@@ -1,4 +1,4 @@
-package com.example.backend.kafka.enums;
+package com.example.backend.enums;
 
 public enum ChatRole {
     USER,

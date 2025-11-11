@@ -1,7 +1,6 @@
 package com.example.backend.kafka.consumer;
 
-import com.example.backend.dto.ChatMessageDTO;
-import com.example.backend.kafka.cache.ChatReplyCache;
+import com.example.backend.application.ChatMessageApplication;
 import com.example.backend.kafka.dto.ChatMessageEvent;
 
 import lombok.RequiredArgsConstructor;
@@ -14,20 +13,24 @@ import org.slf4j.LoggerFactory;
 @RequiredArgsConstructor
 public class ChatReplyConsumer {
 
+    private final ChatMessageApplication chatMessageApplication;
     private static final Logger log = LoggerFactory.getLogger(ChatReplyConsumer.class);
 
-    private final ChatReplyCache replyCache;
+@KafkaListener(topics = "chat.message.system.v1")
+    public void consumeSystemChatMessage(ChatMessageEvent event) {
+        try {
+            chatMessageApplication.recieveSystemMesageFromEvent(event);
 
-    @KafkaListener(topics = "chat.message.system.v1")
-    public void consumeReply(ChatMessageEvent event) {
-        ChatMessageDTO dto = new ChatMessageDTO(event.message());
+            // Professional logging
+            log.info(
+                "Consumed system chat message for accountId={} | role={} | message='{}' | timestamp={}",
+                event.accountId(), event.role(), event.message(), event.created_at()
+            );
 
-        // Correlation ID can be accountId or a dedicated field if you add one
-        String correlationId = event.accountId().toString();
-
-        log.info("Consumed reply for correlationId={}, role={}, message={}",
-                 correlationId, event.role(), event.message());
-
-        replyCache.put(correlationId, dto);
+        } catch (Exception ex) {
+            log.error(
+                "Failed to process system chat message for accountId={} | role={} | message='{}'",
+                event.accountId(), event.role(), event.message(), ex);
+        }
     }
 }

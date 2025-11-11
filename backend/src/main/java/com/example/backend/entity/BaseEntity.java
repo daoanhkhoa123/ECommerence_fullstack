@@ -1,7 +1,6 @@
 package com.example.backend.entity;
 
-import java.sql.Timestamp;
-
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -13,25 +12,28 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class BaseEntity {
+
     @Column(nullable = false)
-    private Boolean isActive =true;
+    private Boolean isActive = true;
 
     @Column(nullable = false, updatable = false)
-    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate(){
-        createdAt = new Timestamp(System.currentTimeMillis());
-        updatedAt = createdAt;
-        if (isActive==null) isActive=true;
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;
+        if (isActive == null) {
+            isActive = true;
+        }
     }
 
     @PreUpdate
-    protected void onUpdate(){
-        updatedAt = new Timestamp(System.currentTimeMillis());
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
-
 }
