@@ -11,7 +11,7 @@ services:
       KAFKA_URL: broker:29092
       KAFKA_GROUP: aimodule-group
 
-      GOOGLE_API_KEY: AIzaSyATZ9Z17sS0ggZ8p5190pHehKb8s-84ZPc
+      GOOGLE_API_KEY: AIzaSyBZPAZa5i_uwFEIYDOZaq5lRiYV-hnvXHE
       GOOGLE_LLM: gemini-2.5-flash
       GOOGLE_EMBEDDING: models/text-embedding-004a
 

@@ -6,6 +6,9 @@ from src.allocation.entrypoints.message_broker.consumer.schemas.vendor_event imp
     VendorCreateUpdateEvent, VendorReadDeleteEvent)
 from src.allocation.entrypoints.message_broker.dispatcher import register_topic
 from src.allocation.services import account_service
+import logging
+
+logger = logging.getLogger(__name__)
 
 # --------------------------------------------------
 # CUSTOMER HANDLERS
@@ -17,6 +20,11 @@ async def handle_customer_create(event: dict):
     data = CustomerCreateUpdateEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     account_service.register_customer(data, uow)
+    logger.info(
+        "Customer created - id=%s, email=%s",
+        data.customer_id,
+        data.email,
+    )
 
 
 @register_topic("customer.update.v1")
@@ -25,6 +33,11 @@ async def handle_customer_update(event: dict):
     data = CustomerCreateUpdateEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     account_service.update_customer(data.customer_id, data, uow)
+    logger.info(
+        "Customer updated - id=%s, email=%s",
+        data.customer_id,
+        data.email,
+    )
 
 
 @register_topic("customer.delete.v1")
@@ -33,6 +46,10 @@ async def handle_customer_delete(event: dict):
     data = CustomerReadDeleteEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     account_service.delete_customer(data.customer_id, uow)
+    logger.info(
+        "Customer deleted - id=%s",
+        data.customer_id,
+    )
 
 
 @register_topic("customer.read.v1")
@@ -41,7 +58,17 @@ async def handle_customer_read(event: dict):
     data = CustomerReadDeleteEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     customer = account_service.find_customer_by_id(data.customer_id, uow)
-    # Optionally publish a read result event or log the retrieved data
+    if customer:
+        logger.info(
+            "Called accountService.findCustomerById() - Found id=%s, full_name=%s",
+            customer.id,
+            customer.full_name,
+        )
+    else:
+        logger.info(
+            "Called accountService.findCustomerById() - No customer found for id=%s",
+            data.customer_id,
+        )
 
 
 # --------------------------------------------------
@@ -54,6 +81,11 @@ async def handle_vendor_create(event: dict):
     data = VendorCreateUpdateEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     account_service.register_vendor(data, uow)
+    logger.info(
+        "Vendor created - id=%s, email=%s",
+        data.vendor_id,
+        data.email,
+    )
 
 
 @register_topic("vendor.update.v1")
@@ -62,6 +94,11 @@ async def handle_vendor_update(event: dict):
     data = VendorCreateUpdateEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     account_service.update_vendor(data.vendor_id, data, uow)
+    logger.info(
+        "Vendor updated - id=%s, email=%s",
+        data.vendor_id,
+        data.email,
+    )
 
 
 @register_topic("vendor.delete.v1")
@@ -70,6 +107,10 @@ async def handle_vendor_delete(event: dict):
     data = VendorReadDeleteEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     account_service.delete_vendor(data.vendor_id, uow)
+    logger.info(
+        "Vendor deleted - id=%s",
+        data.vendor_id,
+    )
 
 
 @register_topic("vendor.read.v1")
@@ -78,4 +119,14 @@ async def handle_vendor_read(event: dict):
     data = VendorReadDeleteEvent(**event)
     uow = SqlAlchemyUnitOfWork()
     vendor = account_service.find_vendor_by_id(data.vendor_id, uow)
-    # Optionally publish a read result event or log the retrieved data
+    if vendor:
+        logger.info(
+            "Called accountService.findVendorById() - Found id=%s, shop name=%s",
+            vendor.id,
+            vendor.shop_name,
+        )
+    else:
+        logger.info(
+            "Called accountService.findVendorById() - No vendor found for id=%s",
+            data.vendor_id,
+        )

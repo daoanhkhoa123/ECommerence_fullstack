@@ -2,7 +2,7 @@ import logging
 import sys
 
 
-def setup_loggin(debug:bool=False) -> None:
+def setup_logging(debug:bool=False) -> None:
     """Configure global logging behavior."""
 
     logging.basicConfig(
@@ -12,7 +12,3 @@ def setup_loggin(debug:bool=False) -> None:
             logging.StreamHandler(sys.stdout)
         ]
     )
-
-    logging.getLogger("psycopg2").setLevel(logging.WARNING)
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-

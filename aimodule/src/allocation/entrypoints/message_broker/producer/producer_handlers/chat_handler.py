@@ -4,8 +4,9 @@ from src.allocation.entrypoints.message_broker.dispatcher import register_topic
 from src.allocation.entrypoints.message_broker.producer import kafka_producer
 from src.allocation.entrypoints.message_broker.producer.schemas.chat_message_event import ChatMessageEvent
 from src.allocation.services.chat_service import build_graph, handle_user_message
+import logging
 
-# Build chat graph once for reuse (expensive initialization)
+logger = logging.getLogger(__name__)
 chat_graph = build_graph()
 
 
