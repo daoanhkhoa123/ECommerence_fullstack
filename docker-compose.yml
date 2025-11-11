@@ -1,8 +1,8 @@
 include:
   - ./aimodule_db/compose.aimodule_db.yml
-  # - ./aimodule/compose.ai
+  - ./aimodule/compose.aimodule.yml
 
   - ./backend_db/compose.backend_db.yml
-  # - ./backend/compose.backends.yml
+  - ./backend/compose.backend.yml
   
   - ./kafka/compose.kafka.yml

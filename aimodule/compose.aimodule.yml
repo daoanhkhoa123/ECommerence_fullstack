@@ -1,0 +1,20 @@
+services:
+  aimodule:
+    build:
+      dockerfile: Dockerfile
+    container_name: aimodule-app
+    # depends_on:
+    #   - aimodule_db
+    #   - broker
+    environment:
+      DATABASE_URL: postgresql://admin_aimodule:admin123@aimodule_db:5432/aimodule_db
+      KAFKA_URL: broker:29092
+      KAFKA_GROUP: aimodule-group
+
+      GOOGLE_API_KEY: AIzaSyATZ9Z17sS0ggZ8p5190pHehKb8s-84ZPc
+      GOOGLE_LLM: gemini-2.5-flash
+      GOOGLE_EMBEDDING: models/text-embedding-004a
+
+    ports:
+      - "8000:8000"
+
