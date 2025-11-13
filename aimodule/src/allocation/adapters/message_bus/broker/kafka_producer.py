@@ -1,7 +1,7 @@
 import json
 
 from confluent_kafka import Producer
-from src.allocation.configs.settings import KafkaSettings
+from src.configs.settings import KafkaSettings
 
 settings = KafkaSettings()  # type: ignore
 

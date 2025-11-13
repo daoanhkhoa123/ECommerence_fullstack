@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from src.allocation.configs.settings import DatabaseSettings
+from src.configs.settings import DatabaseSettings
 from sqlalchemy.orm import DeclarativeBase
 
 # Load environment variables

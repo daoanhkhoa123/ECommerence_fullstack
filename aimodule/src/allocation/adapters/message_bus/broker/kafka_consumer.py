@@ -2,7 +2,7 @@ import asyncio
 import json
 
 from confluent_kafka import Consumer, KafkaError
-from src.allocation.configs.settings import KafkaSettings
+from src.configs.settings import KafkaSettings
 from src.allocation.entrypoints.message_broker.dispatcher import \
     get_handler_for_topic
 

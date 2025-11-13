@@ -37,7 +37,6 @@ class KafkaSettings(BaseSettings):
 
 
 class LLMSettings(BaseSettings):
-    google_api_key: str  
     google_llm: str      
     google_embedding: str  
 

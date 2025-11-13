@@ -1,6 +1,6 @@
 import importlib
 import pathlib
-from src.allocation.configs.settings import AppSettings, KafkaSettings
+from src.configs.settings import AppSettings, KafkaSettings
 
 kafka_settings = KafkaSettings()  # type: ignore
 app_settings = AppSettings()
