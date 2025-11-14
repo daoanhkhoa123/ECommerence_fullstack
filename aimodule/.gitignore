@@ -1,1 +1,3 @@
 src\.key
+.vscode
+.venv
