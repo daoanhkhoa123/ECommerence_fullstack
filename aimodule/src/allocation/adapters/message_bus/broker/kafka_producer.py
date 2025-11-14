@@ -1,9 +1,12 @@
 import json
-
+import logging
 from confluent_kafka import Producer
 from src.configs.settings import KafkaSettings
 
+logger = logging.getLogger(__name__)
+
 settings = KafkaSettings()  # type: ignore
+
 
 class KafkaProducer:
     def __init__(self):
@@ -16,21 +19,25 @@ class KafkaProducer:
 
     def _delivery_report(self, err, msg):
         if err:
-            print(f"[Kafka] Message delivery failed: {err}")
+            logger.error(f"[Kafka] Message delivery failed: {err}")
         else:
-            print(f"[Kafka] Message delivered to {msg.topic()} [{msg.partition()}]")
+            logger.info(f"[Kafka] Message delivered to {msg.topic()} [{msg.partition()}]")
 
     def send(self, topic: str, value: dict):
         """
         Produce a message to Kafka.
-        value: dict that will be JSON-serialized
+        value: dict that will be JSON-serialized.
         """
-        self.producer.produce(
-            topic=topic,
-            value=json.dumps(value).encode("utf-8"),
-            callback=self._delivery_report
-        )
-        self.producer.flush()
+        try:
+            self.producer.produce(
+                topic=topic,
+                value=json.dumps(value).encode("utf-8"),
+                callback=self._delivery_report
+            )
+            self.producer.flush()
+            logger.debug(f"Flushed Kafka producer after sending message to topic: {topic}")
+        except Exception as e:
+            logger.exception(f"Failed to send message to Kafka topic '{topic}': {e}")
 
 
 # Optional convenience function if you prefer using functions instead of class

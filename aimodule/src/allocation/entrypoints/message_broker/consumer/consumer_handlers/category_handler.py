@@ -2,7 +2,7 @@ from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
     SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.consumer.schemas.category_event import (
     CategoryCreateUpdateEvent, CategoryReadDeleteEvent)
-from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.adapters.message_bus.broker.dispatcher import register_topic
 from src.allocation.services import category_service
 import logging
 

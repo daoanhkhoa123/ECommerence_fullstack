@@ -1,10 +1,10 @@
+import logging
 from fastapi import FastAPI
 from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
-from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.adapters.message_bus.broker.dispatcher import register_topic
 from src.allocation.entrypoints.message_broker.producer import kafka_producer
 from src.allocation.entrypoints.message_broker.producer.schemas.chat_message_event import ChatMessageEvent
 from src.allocation.services.chat_service import build_graph, handle_user_message
-import logging
 
 logger = logging.getLogger(__name__)
 chat_graph = build_graph()
@@ -31,21 +31,21 @@ async def handle_chat_message(event: dict, app: FastAPI | None = None):
             uow.commit()
 
         # Produce reply back to Kafka as SYSTEM role
+        payload = {
+            "accountId": data.account_id,
+            "message": response_text,
+            "role": "SYSTEM",
+        }
+
         kafka_producer.send(
             topic="chat.message.system.v1",
-            value={
-                "accountId": data.account_id,  # use alias
-                "message": response_text,
-                "role": "SYSTEM",
-            },
+            value=payload,
         )
-        print("SENT: ", str({"accountId": data.account_id,  # use alias
-                "message": response_text,
-                "role": "SYSTEM",}))
+
+        logger.info(f"[Kafka] Sent system message: {payload}")
 
     except Exception as e:
-        # Basic error handling (replace with proper logging if available)
         if app and hasattr(app, "logger"):
             app.logger.exception("Error handling chat message")  # type: ignore
         else:
-            print(f"[handle_chat_message] Error: {e}")
+            logger.exception(f"[handle_chat_message] Error: {e}")

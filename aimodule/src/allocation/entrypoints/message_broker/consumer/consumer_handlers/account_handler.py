@@ -4,7 +4,7 @@ from src.allocation.entrypoints.message_broker.consumer.schemas.customer_event i
     CustomerCreateUpdateEvent, CustomerReadDeleteEvent)
 from src.allocation.entrypoints.message_broker.consumer.schemas.vendor_event import (
     VendorCreateUpdateEvent, VendorReadDeleteEvent)
-from src.allocation.entrypoints.message_broker.dispatcher import register_topic
+from src.allocation.adapters.message_bus.broker.dispatcher import register_topic
 from src.allocation.services import account_service
 import logging
 

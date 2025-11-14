@@ -1,12 +1,15 @@
 import asyncio
 import json
+import logging
 
 from confluent_kafka import Consumer, KafkaError
 from src.configs.settings import KafkaSettings
-from src.allocation.entrypoints.message_broker.dispatcher import \
-    get_handler_for_topic
+from src.allocation.adapters.message_bus.broker.dispatcher import get_handler_for_topic
 
-settings = KafkaSettings() # type: ignore
+logger = logging.getLogger(__name__)
+
+settings = KafkaSettings()  # type: ignore
+
 
 def create_kafka_consumer(topics: list[str]) -> Consumer:
     """
@@ -14,7 +17,7 @@ def create_kafka_consumer(topics: list[str]) -> Consumer:
     """
     config = {
         "bootstrap.servers": settings.kafka_url,
-        "group.id": settings.kafka_group, 
+        "group.id": settings.kafka_group,
         "auto.offset.reset": "earliest",
         "enable.auto.commit": True,
     }
@@ -37,21 +40,21 @@ async def consume_forever(consumer: Consumer, poll_interval: float = 1.0):
 
             if msg.error():
                 if msg.error().code() != KafkaError._PARTITION_EOF:
-                    print(f"[Kafka Error] {msg.error()}")
+                    logger.error(f"[Kafka Error] {msg.error()}")
                 continue
 
             try:
                 topic = msg.topic()
                 handler = get_handler_for_topic(topic)
                 if not handler:
-                    print(f"[WARN] No handler registered for topic: {topic}")
+                    logger.warning(f"No handler registered for topic: {topic}")
                     continue
 
                 event = json.loads(msg.value().decode("utf-8"))
                 await handler(event)
             except Exception as e:
-                print(f"[Error] Failed to process message from {msg.topic()}: {e}")
+                logger.exception(f"Failed to process message from {msg.topic()}: {e}")
     except asyncio.CancelledError:
-        print("[Kafka Consumer] Shutting down gracefully...")
+        logger.info("Kafka Consumer shutting down gracefully...")
     finally:
         consumer.close()

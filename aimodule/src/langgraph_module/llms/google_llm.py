@@ -1,14 +1,15 @@
 from src.configs.settings import LLMSettings
+from src.configs.keys  import LLMApiKeys
 from google import genai as _genai
 from src.allocation.domain.entities.chat_message import ChatMessage
 from src.langgraph_module.llms.llm_interface import LLMInterface
-
 
 class GoogleLLM(LLMInterface):
 
     def __init__(self):
         self.settings = LLMSettings() # type: ignore
-        self._client = _genai.Client(api_key=self.settings.google_api_key)
+        self._keys = LLMApiKeys() # type: ignore
+        self._client = _genai.Client(api_key=self._keys.google_api_key)
 
     def _generate_text(self, prompt: str) -> str:
         response = self._client.models.generate_content(
