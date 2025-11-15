@@ -1,8 +1,8 @@
 from typing import List
 from sqlalchemy.orm import Session
 
-from src.allocation.adapters.persistence.models.chat_message_model import ChatMessageModel
-from src.allocation.domain.entities.chat_message import ChatMessage
+from src.langgraph_module.adapters.persistence.models.chat_message_model import ChatMessageModel
+from src.langgraph_module.domain.entities.chat_message import ChatMessage
 
 
 class SqlAlchemyChatMessageRepository:

@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 from langgraph.graph import StateGraph, END
-from src.allocation.adapters.llm.google_llm import GoogleLLM
-from src.allocation.domain.entities.chat_message import ChatMessage
+from src.langgraph_module.llms.google_llm import GoogleLLM
+from src.langgraph_module.domain.entities.chat_message import ChatMessage
 from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
 from src.allocation.services.account_service import find_user_by_account_id
 

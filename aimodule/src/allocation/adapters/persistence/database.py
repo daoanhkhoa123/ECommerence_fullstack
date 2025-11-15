@@ -24,16 +24,6 @@ SessionLocal = scoped_session(
     )
 )
 
-# Dependency factory
-def get_session():
-    """Factory function to get a new SQLAlchemy session."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 
 class Base(DeclarativeBase):
     pass

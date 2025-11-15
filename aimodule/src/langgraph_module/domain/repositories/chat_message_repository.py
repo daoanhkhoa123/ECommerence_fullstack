@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from src.allocation.domain.entities.chat_message import ChatMessage
+from src.langgraph_module.domain.entities.chat_message import ChatMessage
 
 
 class ChatMessageRepository(ABC):

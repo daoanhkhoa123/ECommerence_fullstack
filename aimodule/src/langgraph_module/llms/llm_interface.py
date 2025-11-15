@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-
-from src.allocation.domain.entities.chat_message import ChatMessage
-
+from typing import Callable, TypeVar
+from src.langgraph_module.domain.entities.chat_message import ChatMessage
 
 class LLMInterface(ABC):
 
@@ -13,3 +12,12 @@ class LLMInterface(ABC):
     @abstractmethod
     def chat_by_message(self, message:ChatMessage) -> ChatMessage:
         pass
+
+    def deco_func(self, func: Callable[..., str]) -> Callable[..., str]:
+
+        def wrapper(*args, **kwargs):
+            kwargs["llm"] = self
+            return func(*args, **kwargs)
+        
+        return wrapper
+    

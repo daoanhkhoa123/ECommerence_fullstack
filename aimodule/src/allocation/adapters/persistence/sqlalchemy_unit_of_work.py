@@ -3,7 +3,7 @@ from src.allocation.adapters.persistence.repositories.account_repository import 
     SqlAlchemyAccountRepository
 from src.allocation.adapters.persistence.repositories.category_repository import \
     SqlAlchemyCategoryRepository
-from src.allocation.adapters.persistence.repositories.chat_message_repository import \
+from src.langgraph_module.adapters.persistence.repositories.chat_message_repository import \
     SqlAlchemyChatMessageRepository
 from src.allocation.adapters.persistence.repositories.customer_repository import \
     SqlAlchemyCustomerRepository

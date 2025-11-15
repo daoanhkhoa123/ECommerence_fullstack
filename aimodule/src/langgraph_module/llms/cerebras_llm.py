@@ -1,12 +1,12 @@
 from src.configs.settings import LLMSettings
 from src.configs.keys  import LLMApiKeys
-from src.allocation.domain.entities.chat_message import ChatMessage
+from src.langgraph_module.domain.entities.chat_message import ChatMessage
 from src.langgraph_module.llms.llm_interface import LLMInterface
 from langchain_openai import ChatOpenAI
 from typing import Literal
 
 _BASE_URL = r"https://api.cerebras.ai/v1"
-CEREBRAS_LLMS = Literal[
+CEREBRAS_NAMES = Literal[
     "oss-120b",
     "llama-3.3-70b",
     "llama3.1-8b",
@@ -18,7 +18,7 @@ CEREBRAS_LLMS = Literal[
 
 
 class CerebrasLLM(LLMInterface):
-    def __init__(self, model_name:CEREBRAS_LLMS, temperature: float = 0.8, **model_kwargs) -> None:
+    def __init__(self, model_name:CEREBRAS_NAMES, temperature: float = 0.8, **model_kwargs) -> None:
         self.settings = LLMSettings() # type: ignore
         self._keys = LLMApiKeys() # type: ignore
 

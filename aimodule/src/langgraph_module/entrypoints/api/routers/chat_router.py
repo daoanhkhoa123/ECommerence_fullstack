@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from contextlib import contextmanager
 
-from src.allocation.entrypoints.api.schemas.chat_message_request import ChatMessageRequest
-from src.allocation.services.chat_service import build_graph, handle_user_message
+from src.langgraph_module.entrypoints.api.schemas.chat_message_request import ChatMessageRequest
+from src.langgraph_module.services.chat_service import build_graph, handle_user_message
 from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
 
 router = APIRouter(prefix="/chat", tags=["chat"])
