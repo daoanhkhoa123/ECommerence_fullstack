@@ -1,7 +1,8 @@
 from datetime import date
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
+
 
 class CustomerCreateUpdateEvent(BaseModel):
     actor_id: int = Field(..., alias="actorId")

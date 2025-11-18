@@ -1,8 +1,10 @@
-from fastapi import FastAPI
-from src.allocation.entrypoints.startup import lifespan
-from src.allocation.entrypoints.api.routers import api_router
-from src.configs.logging import setup_logging
 import logging
+
+from fastapi import FastAPI
+
+from src.allocation.entrypoints.startup import lifespan
+from src.configs.logging import setup_logging
+from src.langgraph_module.entrypoints.api.routers import api_router
 
 # Configure logging
 setup_logging(debug=True)

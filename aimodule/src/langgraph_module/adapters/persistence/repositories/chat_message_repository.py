@@ -1,7 +1,9 @@
 from typing import List
+
 from sqlalchemy.orm import Session
 
-from src.langgraph_module.adapters.persistence.models.chat_message_model import ChatMessageModel
+from src.langgraph_module.adapters.persistence.models.chat_message_model import \
+    ChatMessageModel
 from src.langgraph_module.domain.entities.chat_message import ChatMessage
 
 
@@ -37,4 +39,17 @@ class SqlAlchemyChatMessageRepository:
                 created_at=record.created_at, # type: ignore
             )
             for record in records
+        ]
+
+    def get_last_k_by_user_id(self, account_id:int, top_k:int=5) -> List[ChatMessage]:
+        records = (self.session.query(ChatMessageModel)
+                   .filter(ChatMessageModel.account_id == account_id)
+                   .order_by(ChatMessageModel.created_at.desc())
+                   .limit(top_k).all())
+        
+        return [
+            ChatMessage(role=record.role, # type: ignore
+                        content=record.content, # type: ignore
+                        created_at=record.created_at) # type: ignore
+                for record in records
         ]

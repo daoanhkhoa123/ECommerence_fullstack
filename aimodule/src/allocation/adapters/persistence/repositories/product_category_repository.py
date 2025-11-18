@@ -3,6 +3,7 @@ from typing import List
 
 from sqlalchemy import delete, insert
 from sqlalchemy.orm import Session
+
 from src.allocation.adapters.persistence.models.category_model import \
     CategoryModel
 from src.allocation.adapters.persistence.models.products_categories_model import \

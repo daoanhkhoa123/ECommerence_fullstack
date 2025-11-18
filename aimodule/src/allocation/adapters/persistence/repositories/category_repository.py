@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+
 from src.allocation.adapters.persistence.models.category_model import \
     CategoryModel
 from src.allocation.domain.entities.category import Category

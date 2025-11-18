@@ -1,8 +1,3 @@
-SELECT 
-    table_name,
-    column_name,
-    data_type
-FROM information_schema.columns
-WHERE table_schema = 'public'
-ORDER BY table_name, ordinal_position;
-    
+SELECT column_name, column_default, is_nullable 
+FROM information_schema.columns 
+WHERE table_name = 'accounts' AND column_name IN ('id', 'account_id');

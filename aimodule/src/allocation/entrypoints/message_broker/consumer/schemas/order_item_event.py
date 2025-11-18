@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
+
 class OrderItemEvent(BaseModel):
     account_id: int = Field(..., alias="accountId")
     customer_id: int = Field(..., alias="customerId")

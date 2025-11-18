@@ -1,0 +1,3 @@
+from src.allocation.adapters.persistence import auto_register_models_and_create_tables
+
+auto_register_models_and_create_tables()

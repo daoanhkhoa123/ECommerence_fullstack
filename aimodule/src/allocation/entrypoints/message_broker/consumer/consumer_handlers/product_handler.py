@@ -1,11 +1,13 @@
+import logging
+
+from src.allocation.adapters.message_bus.broker.dispatcher import \
+    register_topic
 from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
     SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.consumer.schemas.vendor_product_event import (
     VendorProductCreateUpdateEvent, VendorProductDeleteEvent,
     VendorProductReadEvent)
-from src.allocation.adapters.message_bus.broker.dispatcher import register_topic
 from src.allocation.services import product_service
-import logging
 
 logger = logging.getLogger(__name__)
 uow = SqlAlchemyUnitOfWork()

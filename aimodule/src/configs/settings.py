@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _ENV_FILE = Path(__file__).parent.parent / ".env"
@@ -10,6 +11,7 @@ DEFAULT_PRODUCER_HANDLERS = "src.allocation.entrypoints.message_broker.producer.
 
 class DatabaseSettings(BaseSettings):
     database_url: str  
+    database_embedding_dim:int
 
     model_config = SettingsConfigDict(
         env_file=_ENV_FILE,
@@ -37,8 +39,7 @@ class KafkaSettings(BaseSettings):
 
 
 class LLMSettings(BaseSettings):
-    google_llm: str      
-    google_embedding: str  
+    embedding_model: str
 
     model_config = SettingsConfigDict(
         env_file=_ENV_FILE,

@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+
 class VendorProductDeleteEvent(BaseModel):
     actor_id: int = Field(..., alias="actorId")
     vendor_product_id: int = Field(..., alias="vendorProductId")

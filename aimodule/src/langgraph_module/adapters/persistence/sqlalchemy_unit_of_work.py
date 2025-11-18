@@ -1,7 +1,11 @@
 from src.allocation.adapters.persistence.database import SessionLocal
 from src.langgraph_module.adapters.persistence.repositories.chat_message_repository import \
     SqlAlchemyChatMessageRepository
+from src.langgraph_module.adapters.persistence.repositories.product_embedding_repository import \
+    SqlAlchemyProductEmbeddingRepository
 
+from src.langgraph_module.adapters.persistence.models.product_embedding_model import ProductEmbeddingModel
+ProductEmbeddingModel()
 
 class SqlAlchemyUnitOfWork:
     def __init__(self):
@@ -9,6 +13,7 @@ class SqlAlchemyUnitOfWork:
 
     def __enter__(self):
         self.chat_messages = SqlAlchemyChatMessageRepository(self.session)
+        self.product_embeddings = SqlAlchemyProductEmbeddingRepository(self.session)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):

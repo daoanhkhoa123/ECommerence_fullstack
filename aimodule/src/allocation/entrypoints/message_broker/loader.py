@@ -1,7 +1,8 @@
 import importlib
-import pathlib
-from src.configs.settings import AppSettings, KafkaSettings
 import logging
+import pathlib
+
+from src.configs.settings import AppSettings, KafkaSettings
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 def setup_logging(debug: bool = False) -> None:
     """Configure global logging behavior with file path included."""
 

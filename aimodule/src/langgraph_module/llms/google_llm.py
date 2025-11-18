@@ -1,19 +1,25 @@
-from src.configs.settings import LLMSettings
-from src.configs.keys  import LLMApiKeys
+from typing import Literal
+
 from google import genai as _genai
+
+from src.configs.keys import LLMApiKeys
+from src.configs.settings import LLMSettings
 from src.langgraph_module.domain.entities.chat_message import ChatMessage
+from src.langgraph_module.llms.decorator import llm_factory
 from src.langgraph_module.llms.llm_interface import LLMInterface
 
-class GoogleLLM(LLMInterface):
+key_setting = LLMApiKeys() # type: ignore
+GOOGLE_NAMES = Literal["gemini-2.5-flash"]
 
-    def __init__(self):
-        self.settings = LLMSettings() # type: ignore
-        self._keys = LLMApiKeys() # type: ignore
-        self._client = _genai.Client(api_key=self._keys.google_api_key)
+@llm_factory
+class GoogleLLM(LLMInterface):
+    def __init__(self, name:GOOGLE_NAMES):
+        self.name = name
+        self._client = _genai.Client(api_key=key_setting.google_api_key)
 
     def _generate_text(self, prompt: str) -> str:
         response = self._client.models.generate_content(
-            model=self.settings.google_llm,  # type: ignore
+            model=self.name,  # type: ignore
             contents=prompt,
         )
         return response.text # type: ignore
