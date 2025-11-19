@@ -1,6 +1,7 @@
 from typing import Optional
 
 from sqlalchemy.orm import Session
+
 from src.allocation.adapters.persistence.models.order_model import OrderModel
 from src.allocation.domain.entities.order import Order
 

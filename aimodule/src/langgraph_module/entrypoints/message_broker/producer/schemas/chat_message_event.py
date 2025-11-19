@@ -1,7 +1,10 @@
 from datetime import datetime
-from typing import Literal, Optional, Union, List
+from typing import List, Literal, Optional, Union
+
 from pydantic import BaseModel, Field, field_validator
+
 from src.langgraph_module.domain.entities.chat_message import CHAT_ROLE
+
 
 class ChatMessageEvent(BaseModel):
     account_id: int = Field(..., alias="accountId")

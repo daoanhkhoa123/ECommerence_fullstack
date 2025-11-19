@@ -1,14 +1,16 @@
 from typing import List
 
 from fastapi import HTTPException, status
+
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
 from src.allocation.domain.entities.category import Category
-from src.allocation.services.unit_of_work import AbstractUnitOfWork
 
 
 # -----------------------------
 # Category service functions
 # -----------------------------
-def find_category_by_id(category_id: int, uow: AbstractUnitOfWork) -> Category:
+def find_category_by_id(category_id: int, uow: SqlAlchemyUnitOfWork) -> Category:
     with uow:
         category = uow.categories.get(category_id)
         if not category:
@@ -19,13 +21,13 @@ def find_category_by_id(category_id: int, uow: AbstractUnitOfWork) -> Category:
         return category
 
 
-def find_all_categories_by_product_id(product_id: int, uow: AbstractUnitOfWork) -> List[Category]:
+def find_all_categories_by_product_id(product_id: int, uow: SqlAlchemyUnitOfWork) -> List[Category]:
     with uow:
         categories = uow.product_categories.find_categories_by_product_id(product_id)
         return categories
 
 
-def create_category(request, uow: AbstractUnitOfWork) -> Category:
+def create_category(request, uow: SqlAlchemyUnitOfWork) -> Category:
     with uow:
         if uow.categories.exists_by_name(request.name):
             raise HTTPException(
@@ -39,7 +41,7 @@ def create_category(request, uow: AbstractUnitOfWork) -> Category:
         return category
 
 
-def update_category(category_id: int, request, uow: AbstractUnitOfWork) -> Category:
+def update_category(category_id: int, request, uow: SqlAlchemyUnitOfWork) -> Category:
     with uow:
         category = uow.categories.get(category_id)
         if not category:
@@ -61,7 +63,7 @@ def update_category(category_id: int, request, uow: AbstractUnitOfWork) -> Categ
         return category
 
 
-def delete_category(category_id: int, uow: AbstractUnitOfWork):
+def delete_category(category_id: int, uow: SqlAlchemyUnitOfWork):
     with uow:
         category = uow.categories.get(category_id)
         if not category:

@@ -1,17 +1,20 @@
 import asyncio
 import json
 import logging
+import time
 
 from confluent_kafka import Consumer, KafkaError
+
+from src.allocation.adapters.message_bus.broker.dispatcher import \
+    get_handler_for_topic
 from src.configs.settings import KafkaSettings
-from src.allocation.adapters.message_bus.broker.dispatcher import get_handler_for_topic
 
 logger = logging.getLogger(__name__)
 
 settings = KafkaSettings()  # type: ignore
 
 
-def create_kafka_consumer(topics: list[str]) -> Consumer:
+def _create_kafka_consumer(topics: list[str]) -> Consumer:
     """
     Create and configure a Kafka consumer with fixed group ID from settings.
     """
@@ -25,12 +28,28 @@ def create_kafka_consumer(topics: list[str]) -> Consumer:
     consumer.subscribe(topics)
     return consumer
 
+def create_kafka_consumer_with_retries(topics: list[str], max_retries: int = 3, retry_interval: float = 2.0) -> Consumer | None:
+    for attempt in range(1, max_retries + 1):
+        try:
+            consumer = _create_kafka_consumer(topics) 
+            consumer.list_topics(timeout=5.0)  
+            return consumer
+        except Exception as e:
+            logger.error(f"Kafka connection attempt {attempt}/{max_retries} failed: {e}")
+            consumer.close() if 'consumer' in locals() else None # type: ignore
+            if attempt < max_retries:
+                time.sleep(retry_interval)
+            else:
+                logger.error("Failed to connect to Kafka after max retries")
+                return None
+            
 
 async def consume_forever(consumer: Consumer, poll_interval: float = 1.0):
     """
     Asynchronous Kafka consumer loop that dispatches messages to the correct handler
     based on their topic.
     """
+
     try:
         while True:
             msg = consumer.poll(timeout=poll_interval)

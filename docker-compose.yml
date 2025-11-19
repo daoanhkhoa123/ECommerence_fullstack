@@ -6,3 +6,8 @@ include:
   - ./backend/compose.backend.yml
   
   - ./kafka/compose.kafka.yml
+
+networks:
+  default:
+    name: ecommerence_net
+    driver: bridge

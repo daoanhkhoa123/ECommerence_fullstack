@@ -1,13 +1,15 @@
 from fastapi import APIRouter, Depends
-from contextlib import contextmanager
 
-from src.langgraph_module.entrypoints.api.schemas.chat_message_request import ChatMessageRequest
-from src.langgraph_module.services.chat_service import build_graph, handle_user_message
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
+from src.langgraph_module.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
+from src.langgraph_module.entrypoints.api.schemas.chat_message_request import \
+    ChatMessageRequest
+from src.langgraph_module.graphs import basic_chat_graph
+from src.langgraph_module.services.chat_service import handle_user_message
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
-graph = build_graph()
+graph = basic_chat_graph.build_chat_graph()
 
 def get_uow():
     with SqlAlchemyUnitOfWork() as uow:

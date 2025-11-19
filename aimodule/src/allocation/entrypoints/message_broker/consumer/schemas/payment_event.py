@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
+
 class PaymentCreateEvent(BaseModel):
     payment_id: int = Field(..., alias="paymentId")
     order_id: int = Field(..., alias="orderId")

@@ -1,18 +1,24 @@
+import logging
+
+from src.allocation.adapters.message_bus.broker.dispatcher import \
+    register_topic
 from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
     SqlAlchemyUnitOfWork
 from src.allocation.entrypoints.message_broker.consumer.schemas.order_event import \
     OrderStatusUpdateEvent
-from src.allocation.adapters.message_bus.broker.dispatcher import register_topic
 from src.allocation.services import order_service
-import logging
 
 logger = logging.getLogger(__name__)
 uow = SqlAlchemyUnitOfWork()
 
 import logging
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
-from src.allocation.entrypoints.message_broker.consumer.schemas.order_event import OrderStatusUpdateEvent
-from src.allocation.adapters.message_bus.broker.dispatcher import register_topic
+
+from src.allocation.adapters.message_bus.broker.dispatcher import \
+    register_topic
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
+from src.allocation.entrypoints.message_broker.consumer.schemas.order_event import \
+    OrderStatusUpdateEvent
 from src.allocation.services import order_service
 
 logger = logging.getLogger(__name__)

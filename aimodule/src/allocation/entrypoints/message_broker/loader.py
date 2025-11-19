@@ -1,12 +1,13 @@
 import importlib
-import pathlib
-from src.configs.settings import AppSettings, KafkaSettings
 import logging
+import pathlib
+
+from src.configs.settings import AppSettings, KafkaSettings
 
 logger = logging.getLogger(__name__)
 
 kafka_settings = KafkaSettings()  # type: ignore
-app_settings = AppSettings()
+app_settings = AppSettings() # type: ignore
 
 
 def load_all_handlers():

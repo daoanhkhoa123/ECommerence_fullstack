@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+
 from src.allocation.adapters.persistence.models.order_item_model import \
     OrderItemModel
 

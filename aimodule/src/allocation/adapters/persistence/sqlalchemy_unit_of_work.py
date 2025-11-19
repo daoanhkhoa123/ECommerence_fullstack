@@ -3,8 +3,6 @@ from src.allocation.adapters.persistence.repositories.account_repository import 
     SqlAlchemyAccountRepository
 from src.allocation.adapters.persistence.repositories.category_repository import \
     SqlAlchemyCategoryRepository
-from src.langgraph_module.adapters.persistence.repositories.chat_message_repository import \
-    SqlAlchemyChatMessageRepository
 from src.allocation.adapters.persistence.repositories.customer_repository import \
     SqlAlchemyCustomerRepository
 from src.allocation.adapters.persistence.repositories.order_item_repository import \
@@ -17,6 +15,8 @@ from src.allocation.adapters.persistence.repositories.product_repository import 
     SqlAlchemyProductRepository
 from src.allocation.adapters.persistence.repositories.vendor_repository import \
     SqlAlchemyVendorRepository
+from src.langgraph_module.adapters.persistence.repositories.chat_message_repository import \
+    SqlAlchemyChatMessageRepository
 
 
 class SqlAlchemyUnitOfWork:

@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 
 class CategoryCreateUpdateEvent(BaseModel):
     actor_id: int = Field(..., alias="actorId")

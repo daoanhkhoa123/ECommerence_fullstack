@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+
 from src.allocation.adapters.persistence.models.product_model import \
     ProductModel
 from src.allocation.domain.entities.product import Product
