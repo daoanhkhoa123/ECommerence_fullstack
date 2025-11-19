@@ -10,7 +10,7 @@ settings = DatabaseSettings() # type: ignore
 # Create engine
 engine = create_engine(
     settings.database_url,
-    echo=True,               # Set True for SQL logs
+    echo=False,               # Set True for SQL logs
     pool_pre_ping=True,       # Ensures dead connections are recycled
     future=True
 )

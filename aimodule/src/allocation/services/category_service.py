@@ -2,8 +2,9 @@ from typing import List
 
 from fastapi import HTTPException, status
 
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
 from src.allocation.domain.entities.category import Category
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
 
 
 # -----------------------------

@@ -49,6 +49,7 @@ class LLMSettings(BaseSettings):
 
 class AppSettings(BaseSettings):
     src_path: str = "allocation"
+    debug: bool
 
     model_config = SettingsConfigDict(
         env_file=_ENV_FILE,

@@ -12,3 +12,5 @@ def setup_logging(debug: bool = False) -> None:
             logging.StreamHandler(sys.stdout)
         ]
     )
+
+

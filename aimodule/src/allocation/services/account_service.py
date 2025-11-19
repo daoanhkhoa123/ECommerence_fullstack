@@ -1,9 +1,10 @@
 from fastapi import HTTPException, status
 
+from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import \
+    SqlAlchemyUnitOfWork
 from src.allocation.domain.entities.account import ACCOUNT_ROLE, Account
 from src.allocation.domain.entities.customer import Customer
 from src.allocation.domain.entities.vendor import Vendor
-from src.allocation.adapters.persistence.sqlalchemy_unit_of_work import SqlAlchemyUnitOfWork
 
 
 def _set_account_fields(account: Account, request, role: ACCOUNT_ROLE) -> Account:

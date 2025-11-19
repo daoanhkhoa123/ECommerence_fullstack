@@ -25,6 +25,5 @@ def answer_by_data(state:PrepState, context: ContextSchema) -> OutputState:
         - Provide the answer in natural language suitable for the user.
     """
 
-    answer = context.dry_llm
-    (prompt)
+    answer = context.dry_llm(prompt)
     return {"answer": answer}

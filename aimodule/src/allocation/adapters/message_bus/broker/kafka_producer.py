@@ -1,6 +1,8 @@
 import json
 import logging
-from confluent_kafka import Producer, KafkaException
+
+from confluent_kafka import KafkaException, Producer
+
 from src.configs.settings import KafkaSettings
 
 logger = logging.getLogger(__name__)

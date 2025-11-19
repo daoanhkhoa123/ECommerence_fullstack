@@ -1,12 +1,12 @@
 import asyncio
 import json
 import logging
+import time
 
 from confluent_kafka import Consumer, KafkaError
 
 from src.allocation.adapters.message_bus.broker.dispatcher import \
     get_handler_for_topic
-import time
 from src.configs.settings import KafkaSettings
 
 logger = logging.getLogger(__name__)

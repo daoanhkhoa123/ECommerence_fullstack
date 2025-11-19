@@ -1,10 +1,11 @@
 from src.allocation.adapters.persistence.database import SessionLocal
+from src.langgraph_module.adapters.persistence.models.product_embedding_model import \
+    ProductEmbeddingModel
 from src.langgraph_module.adapters.persistence.repositories.chat_message_repository import \
     SqlAlchemyChatMessageRepository
 from src.langgraph_module.adapters.persistence.repositories.product_embedding_repository import \
     SqlAlchemyProductEmbeddingRepository
 
-from src.langgraph_module.adapters.persistence.models.product_embedding_model import ProductEmbeddingModel
 ProductEmbeddingModel()
 
 class SqlAlchemyUnitOfWork:
